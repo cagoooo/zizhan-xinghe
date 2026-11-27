@@ -404,6 +404,120 @@
         min-height: 48px;
       }
     }
+
+    /* ===================== 桌機善用寬度（2026-11-27 v2） ===================== */
+    /* 讓覆蓋層的字可以依「畫布寬度」放大（容器查詢） */
+    #canvas-container { container-type: inline-size; container-name: stage; }
+    .stage-btn, .retro-btn { white-space: nowrap; }
+
+    /* 中等桌機（1100～1499）：單欄，但畫布依螢幕高度放大，不再卡在 1040px */
+    @media (min-width: 1100px) {
+      #game-wrapper {
+        max-width: max(1040px, min(1480px, calc((100dvh - 150px) * 16 / 9)));
+        padding-top: 16px;
+        gap: 10px;
+      }
+      #game-wrapper > header { font-size: 16px; padding: 8px 16px; }
+      #game-wrapper > header .text-\[11px\] { font-size: 14px !important; }
+      #game-wrapper > header > div:first-child > div:first-child { font-size: 20px; }
+      #hud-score, #hud-highscore { font-size: 19px; }
+      #game-wrapper > footer { font-size: 15px; gap: 8px; }
+      #game-wrapper > footer .retro-btn { min-height: 46px; }
+      .footer-inner, .footer-bottom { max-width: min(1480px, 94vw); }
+    }
+
+    /* 寬螢幕（≥1500）：三欄＝左側戰況｜中間戰場｜右側控制台 */
+    @media (min-width: 1500px) and (min-height: 640px) {
+      #game-wrapper {
+        max-width: none;
+        width: 100%;
+        display: grid;
+        grid-template-columns: clamp(230px, 15vw, 300px) minmax(0, calc((100dvh - 44px) * 16 / 9)) clamp(230px, 15vw, 300px);
+        grid-template-rows: auto auto;
+        justify-content: center;
+        align-items: start;
+        column-gap: clamp(16px, 1.4vw, 28px);
+        row-gap: 10px;
+        padding-top: 18px;
+        padding-bottom: 18px;
+      }
+      #canvas-container { grid-column: 2; grid-row: 1; width: 100%; }
+      #rotate-hint, #mobile-controls { grid-column: 2; }
+
+      /* 左側：戰況面板 */
+      #game-wrapper > header {
+        grid-column: 1; grid-row: 1;
+        display: flex; flex-direction: column; flex-wrap: nowrap; align-items: stretch; justify-content: flex-start;
+        gap: 14px; padding: 18px 16px; font-size: 16px;
+        align-self: stretch;
+        background: linear-gradient(180deg, rgba(15, 23, 42, 0.95), rgba(2, 6, 23, 0.95));
+      }
+      #game-wrapper > header > div { flex-direction: column; align-items: stretch !important; gap: 10px !important; }
+      #game-wrapper > header > div:first-child > div:first-child {
+        font-size: clamp(26px, 1.9vw, 34px); letter-spacing: 0.14em; text-align: center;
+        text-shadow: 0 0 16px rgba(56, 189, 248, 0.55);
+      }
+      #hud-stage { font-size: 20px; text-align: center; }
+      #hud-diff { align-self: center; font-size: 14px !important; padding: 3px 14px; }
+      #game-wrapper > header .font-mono > div {
+        display: flex !important; justify-content: space-between; align-items: center; gap: 8px;
+        background: rgba(15, 23, 42, 0.75); border: 1px solid #1e293b; border-radius: 12px; padding: 10px 14px;
+      }
+      #game-wrapper > header .font-mono .text-\[11px\] { font-size: 15px !important; font-family: 'Noto Sans TC', sans-serif; }
+      #hud-score, #hud-highscore { font-size: clamp(24px, 1.7vw, 30px); }
+      #hud-lives, #hud-capture { font-size: 21px; }
+      #hud-power { font-size: 17px; text-align: right; }
+
+      /* 右側：戰鬥控制台 */
+      #game-wrapper > footer {
+        grid-column: 3; grid-row: 1;
+        display: flex; flex-direction: column; gap: 10px; font-size: 16px;
+        align-self: stretch;
+        background: linear-gradient(180deg, rgba(15, 23, 42, 0.95), rgba(2, 6, 23, 0.95));
+        border: 1px solid rgba(51, 65, 85, 0.8); border-radius: 12px; padding: 16px;
+      }
+      #game-wrapper > footer::before {
+        content: "🎛️ 戰鬥控制台"; font-weight: 900; font-size: 18px; color: #e2e8f0;
+        letter-spacing: 0.08em; text-align: center; padding-bottom: 6px; border-bottom: 1px solid #1e293b;
+      }
+      #game-wrapper > footer .retro-btn {
+        min-height: 52px; font-size: 16px; padding: 0 16px; text-align: left; display: flex; align-items: center;
+      }
+      #game-wrapper > footer::after {
+        content: "快捷鍵：B 捕獲／自爆・I 圖鑑・T 字型・F 自動射・P 暫停・M 全螢幕";
+        font-size: 14px; line-height: 1.6; color: #94a3b8; padding-top: 10px; margin-top: auto;
+        border-top: 1px solid #1e293b;
+      }
+      .footer-inner, .footer-bottom { max-width: min(1680px, 94vw); }
+    }
+
+    /* 選單、圖鑑、暫停、結算畫面：依畫布寬度放大字體（只在畫布夠大時） */
+    @container stage (min-width: 900px) {
+      #overlay-title { justify-content: center; gap: clamp(14px, 2.4cqw, 34px); }
+      #overlay-title .max-w-3xl, #overlay-dex .max-w-3xl { max-width: 88cqw; }
+      .overlay .text-\[10px\] { font-size: clamp(13px, 1.35cqw, 19px) !important; }
+      .overlay .text-\[11px\] { font-size: clamp(14px, 1.45cqw, 20px) !important; }
+      .overlay .text-xs { font-size: clamp(14px, 1.45cqw, 20px) !important; }
+      .overlay .text-sm { font-size: clamp(15px, 1.6cqw, 22px) !important; }
+      #overlay-title h1 { font-size: clamp(48px, 7cqw, 104px); }
+      #overlay-title h1 + div { height: auto !important; }
+      .ship-card { padding: clamp(8px, 1.2cqw, 18px) !important; gap: 4px; }
+      .ship-card .text-2xl { font-size: clamp(30px, 3.6cqw, 54px); line-height: 1.1; }
+      .stage-btn { padding: clamp(3px, 0.5cqw, 8px) clamp(8px, 1.1cqw, 16px) !important; }
+      #overlay-title .gap-1, #overlay-title .gap-1\.5 { gap: clamp(6px, 0.8cqw, 12px); }
+      #overlay-title .grid { gap: clamp(8px, 1.2cqw, 18px); }
+      #btn-start { font-size: clamp(16px, 2cqw, 28px) !important; padding: clamp(10px, 1.2cqw, 18px) clamp(24px, 3cqw, 44px) !important; }
+      #btn-title-dex, #btn-title-fullscreen { font-size: clamp(13px, 1.4cqw, 19px) !important; padding: clamp(10px, 1.2cqw, 18px) clamp(12px, 1.4cqw, 20px) !important; }
+      #overlay-title .leading-snug { line-height: 1.6; padding: clamp(8px, 1cqw, 16px) clamp(10px, 1.4cqw, 20px) !important; }
+      .overlay h2.text-4xl { font-size: clamp(36px, 5cqw, 72px); }
+      .overlay h2.text-lg { font-size: clamp(20px, 2.2cqw, 30px); }
+      .overlay .text-5xl { font-size: clamp(42px, 5.4cqw, 80px); }
+      .overlay .retro-btn.text-sm { padding: clamp(8px, 1cqw, 14px) clamp(18px, 2.2cqw, 30px) !important; }
+      #dex-grid { gap: clamp(6px, 0.9cqw, 12px); }
+    }
+    @container stage (min-width: 1200px) {
+      #dex-grid { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
+    }
   </style>
 </head>
 <body>
@@ -683,11 +797,27 @@
       return `${f.weight} ${size}px ${f.family}`;
     }
 
+    // 依畫布「實際顯示大小 × 螢幕像素密度」設定解析度：大螢幕放大時字不會糊
+    // 遊戲座標仍是 960×540，只是用 setTransform 等比例放大繪製
     function resizeCanvas() {
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      canvas.width = W * dpr;
-      canvas.height = H * dpr;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const cssW = canvas.getBoundingClientRect().width || W;
+      const k = Math.max(1, Math.min(cssW * dpr, 3200) / W);
+      const pw = Math.round(W * k);
+      const ph = Math.round(H * k);
+      if (canvas.width !== pw || canvas.height !== ph) {
+        canvas.width = pw;
+        canvas.height = ph;
+      }
+      ctx.setTransform(k, 0, 0, k, 0, 0);
+    }
+    if ('ResizeObserver' in window) {
+      let resizeQueued = false;
+      new ResizeObserver(() => {
+        if (resizeQueued) return;
+        resizeQueued = true;
+        requestAnimationFrame(() => { resizeQueued = false; resizeCanvas(); });
+      }).observe(container);
     }
 
     function getCanvasCoords(clientX, clientY) {
