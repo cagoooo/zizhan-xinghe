@@ -1821,6 +1821,7 @@
         score: info.score,
         ai: info.ai,
         timer: 0,
+        seed: Math.random() * 1000,
         fireCd: (55 + Math.random() * 50) * diff.fireCdMult,
         hitFlash: 0,
         ...extra
@@ -2643,6 +2644,161 @@
     // ============================================================================
     // 主畫面繪製
     // ============================================================================
+    // ============================================================================
+    // 字的小動作：每個字依照字義有自己的動態（鳥會振翅、葉會翻飛、魂會忽隱忽現…）
+    // 只改「畫的樣子」，不改碰撞與移動，所以不影響難度
+    // ============================================================================
+    let animClock = 0;
+    const MOTION = {};
+    const setMotion = (type, chars) => [...chars].forEach(c => { MOTION[c] = type; });
+    setMotion('flap', '梟蝠雀鳥鷹鳳');           // 振翅：翅膀開合，偶爾滑翔
+    setMotion('flutter', '葉花');                 // 翻飛：左右搖擺、翻面飄落
+    setMotion('wriggle', '蛇魚鯊藤龍鯨');         // 扭動：身體左右擺
+    setMotion('hop', '蛙躍厄爆');                 // 彈跳：蹲下再伸展
+    setMotion('pulse', '蛋芽晶昌日泡菇毒咒熔欲'); // 鼓動：一脹一縮
+    setMotion('heart', '愛');                     // 心跳：撲通、撲通
+    setMotion('ghost', '魂魄影鬼虛無闇');         // 幽影：忽隱忽現、上下飄
+    setMotion('fire', '火炎光');                  // 火焰：竄動閃爍
+    setMotion('spin', '星彗隕渦嵐刺栗');          // 旋轉
+    setMotion('tremble', '狂怒猛雷懼');           // 顫抖
+    setMotion('march', '兵卒盾哨斥獵突謀護母仔骨骸'); // 行軍：一步一頓
+    setMotion('run', '狐狼猿鼠熊');               // 奔跑：前傾起伏
+    setMotion('sidestep', '蟹');                  // 橫著走
+    setMotion('squid', '蛸');                     // 收縮噴射
+    setMotion('joy', '喜');                       // 開心蹦跳
+    setMotion('droop', '哀');                     // 垂頭喪氣
+    setMotion('sly', '惡阱銀黑終');               // 歪頭獰笑
+    setMotion('drift', '雲岩');                   // 緩慢漂移
+    setMotion('breathe', '壘榕判城源');           // 頭目呼吸
+    setMotion('twinkle', '速雙銳充勳壽究');       // 道具閃爍
+
+    function glyphMotion(char, seed = 0) {
+      const t = animClock + seed;
+      const m = { dx: 0, dy: 0, sx: 1, sy: 1, rot: 0, skew: 0, alpha: 1 };
+      switch (MOTION[char]) {
+        case 'flap': {
+          const fast = char === '雀' || char === '蝠';
+          const cycle = t % (fast ? 90 : 140);
+          if (cycle < (fast ? 70 : 90)) {
+            const w = Math.sin(t * (fast ? 0.42 : 0.26));
+            m.sx = 0.3 + 0.7 * Math.abs(w);       // 翅膀合起來時字變窄
+            m.dy = -Math.abs(w) * 3.5;            // 拍下去時身體上提
+          } else {
+            m.rot = Math.sin(t * 0.05) * 0.08;    // 滑翔
+          }
+          break;
+        }
+        case 'flutter':
+          m.rot = Math.sin(t * 0.06) * 0.5;
+          m.sx = 0.25 + 0.75 * Math.abs(Math.cos(t * 0.09));
+          m.dy = Math.sin(t * 0.12) * 3;
+          break;
+        case 'wriggle':
+          m.skew = Math.sin(t * 0.18) * 0.32;
+          m.rot = Math.sin(t * 0.18 + 1.2) * 0.07;
+          break;
+        case 'hop': {
+          const h = Math.sin(t * 0.2);
+          m.sy = 1 + h * 0.2;
+          m.sx = 1 - h * 0.13;
+          m.dy = -Math.max(0, h) * 5;
+          break;
+        }
+        case 'pulse': {
+          const p = Math.sin(t * 0.12);
+          m.sx = m.sy = 1 + p * 0.1;
+          break;
+        }
+        case 'heart': {
+          const c = t % 60;
+          const beat = c < 5 ? c * 0.045 : c < 10 ? (10 - c) * 0.045 : c < 14 ? (c - 10) * 0.035 : c < 18 ? (18 - c) * 0.035 : 0;
+          m.sx = m.sy = 1 + beat;
+          break;
+        }
+        case 'ghost':
+          m.alpha = 0.4 + 0.6 * (0.5 + 0.5 * Math.sin(t * 0.09));
+          m.dy = Math.sin(t * 0.05) * 5;
+          m.sx = 1 + Math.sin(t * 0.07) * 0.07;
+          break;
+        case 'fire':
+          m.sy = 1 + Math.sin(t * 0.5) * 0.09 + (Math.random() - 0.5) * 0.06;
+          m.sx = 1 - Math.sin(t * 0.5) * 0.05;
+          m.skew = Math.sin(t * 0.23) * 0.14;
+          break;
+        case 'spin':
+          m.rot = t * (char === '渦' || char === '嵐' ? -0.09 : 0.06);
+          break;
+        case 'tremble':
+          m.dx = (Math.random() - 0.5) * 2.4;
+          m.dy = (Math.random() - 0.5) * 2.4;
+          break;
+        case 'march': {
+          const s = Math.sin(t * 0.22);
+          m.dy = -Math.abs(s) * 3;
+          m.rot = s * 0.07;
+          break;
+        }
+        case 'run': {
+          const g = Math.sin(t * 0.32);
+          m.dy = -Math.abs(g) * 4.5;
+          m.rot = -0.12 + g * 0.06;
+          break;
+        }
+        case 'sidestep':
+          m.rot = Math.sin(t * 0.25) * 0.18;
+          m.dx = Math.sin(t * 0.25) * 3;
+          break;
+        case 'squid': {
+          const q = Math.sin(t * 0.14);
+          m.sy = 1 + q * 0.22;
+          m.sx = 1 - q * 0.13;
+          break;
+        }
+        case 'joy':
+          m.dy = -Math.abs(Math.sin(t * 0.2)) * 8;
+          m.rot = Math.sin(t * 0.1) * 0.14;
+          break;
+        case 'droop':
+          m.rot = 0.2 + Math.sin(t * 0.04) * 0.05;
+          m.dy = 3 + Math.sin(t * 0.04) * 2;
+          m.alpha = 0.82;
+          break;
+        case 'sly':
+          m.rot = Math.sin(t * 0.05) * 0.12;
+          m.skew = Math.sin(t * 0.05) * 0.1;
+          break;
+        case 'drift':
+          m.sx = 1 + Math.sin(t * 0.04) * 0.08;
+          m.dx = Math.sin(t * 0.03) * 4;
+          break;
+        case 'breathe':
+          m.sx = m.sy = 1 + Math.sin(t * 0.05) * 0.035;
+          break;
+        case 'twinkle':
+          m.sx = m.sy = 1 + Math.sin(t * 0.18) * 0.13;
+          m.rot = Math.sin(t * 0.07) * 0.15;
+          break;
+        default:
+          m.dy = Math.sin(t * 0.07) * 1.5;        // 其他字：微微浮動，看起來是活的
+      }
+      return m;
+    }
+
+    // 依小動作畫一個字（顏色、陰影由呼叫端先設定）；被打中時會「彈」一下
+    function drawGlyph(char, x, y, size, seed = 0, hitFlash = 0) {
+      const m = glyphMotion(char, seed);
+      ctx.save();
+      ctx.translate(x + m.dx, y + m.dy);
+      if (m.rot) ctx.rotate(m.rot);
+      if (m.skew) ctx.transform(1, 0, m.skew, 1, 0, 0);
+      const pop = hitFlash > 0 ? 1.18 : 1;
+      ctx.scale(m.sx * pop, m.sy * pop);
+      if (m.alpha < 1) ctx.globalAlpha *= m.alpha;
+      ctx.font = getFont(size);
+      ctx.fillText(char, 0, 0);
+      ctx.restore();
+    }
+
     function drawPlaying() {
       ctx.save();
       if (game.shake > 0) {
@@ -2687,8 +2843,7 @@
         ctx.fillStyle = it.color;
         ctx.shadowColor = it.color;
         ctx.shadowBlur = 12;
-        ctx.font = getFont(it.size);
-        ctx.fillText(it.char, it.x, it.y);
+        drawGlyph(it.char, it.x, it.y, it.size, it.x * 0.7);
         ctx.restore();
       });
 
@@ -2706,20 +2861,23 @@
       // 我機子彈
       game.pBullets.forEach(b => {
         ctx.fillStyle = b.color;
-        ctx.font = getFont(b.size);
-        ctx.fillText(b.char, b.x, b.y);
+        if (b.char === '星') {
+          drawGlyph(b.char, b.x, b.y, b.size, b.y * 3);
+        } else {
+          ctx.font = getFont(b.size);
+          ctx.fillText(b.char, b.x, b.y);
+        }
       });
 
       // 敵機
       game.enemies.forEach(e => {
         ctx.fillStyle = e.hitFlash > 0 ? '#ffffff' : e.color;
-        ctx.font = getFont(e.size);
-        ctx.fillText(e.char, e.x, e.y);
+        drawGlyph(e.char, e.x, e.y, e.size, e.seed || 0, e.hitFlash);
 
         if (game.lockOn.targets.includes(e)) {
           ctx.fillStyle = '#fde047';
           ctx.font = getFont(16);
-          ctx.fillText('鎖', e.x, e.y - e.size * 0.72);
+          ctx.fillText('鎖', e.x, e.y - e.size * 0.72 + Math.sin(animClock * 0.3) * 2);
         }
       });
 
@@ -2737,8 +2895,7 @@
         ctx.fillStyle = b.hitFlash > 0 ? '#ffffff' : b.color;
         ctx.shadowColor = b.color;
         ctx.shadowBlur = 18;
-        ctx.font = getFont(b.size);
-        ctx.fillText(b.char, b.x, b.y);
+        drawGlyph(b.char, b.x, b.y, b.size, 0, b.hitFlash);
         ctx.restore();
 
         if (game.lockOn.targets.includes(b)) {
@@ -2773,8 +2930,7 @@
         ctx.shadowColor = '#34d399';
         ctx.shadowBlur = 12;
         const opSize = op.char === '狂' ? 20 + op.rageStage * 5 : 26;
-        ctx.font = getFont(opSize);
-        ctx.fillText(op.char, op.x, op.y);
+        drawGlyph(op.char, op.x, op.y, opSize, 0);
         ctx.restore();
       }
 
@@ -2791,12 +2947,25 @@
         ctx.restore();
       }
       if (!blink) {
+        // 機身隨上下移動傾斜（平滑過渡）
+        const p = game.player;
+        const dyMove = p.lastDrawY === undefined ? 0 : p.y - p.lastDrawY;
+        p.lastDrawY = p.y;
+        p.bank = (p.bank || 0) * 0.82 + Math.max(-0.3, Math.min(0.3, dyMove * 0.05)) * 0.18;
         ctx.save();
+        ctx.translate(p.x, p.y + Math.sin(animClock * 0.1) * 1.2);
+        // 尾焰「氣」忽長忽短
+        ctx.globalAlpha = 0.45 + Math.random() * 0.35;
+        ctx.fillStyle = '#fb923c';
+        ctx.font = getFont(11 + Math.random() * 4);
+        ctx.fillText('氣', -24 - Math.random() * 3, 1);
+        ctx.globalAlpha = 1;
+        ctx.rotate(p.bank);
         ctx.fillStyle = ship.color;
         ctx.shadowColor = ship.color;
         ctx.shadowBlur = 14;
         ctx.font = getFont(30);
-        ctx.fillText(ship.char, game.player.x, game.player.y);
+        ctx.fillText(ship.char, 0, 0);
         ctx.restore();
       }
       if (game.ultimateTimer > 0) {
@@ -2924,7 +3093,7 @@
 
       for (let i = 0; i < steps; i++) {
         if (game.mode === 'intro') updateAndDrawIntro();
-        else if (game.mode === 'playing') updatePlaying();
+        else if (game.mode === 'playing') { updatePlaying(); animClock++; }
       }
 
       if (game.mode === 'title') {
