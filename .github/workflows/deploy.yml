@@ -1,0 +1,43 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 組合網站檔案 📦
+        run: |
+          mkdir _site
+          cp index.html sw.js sw-register.js manifest.webmanifest _site/
+          cp favicon.svg favicon.ico apple-touch-icon.png og-image.jpg _site/
+          cp icon-192.png icon-512.png icon-192-maskable.png icon-512-maskable.png _site/
+          echo '{"version":"__BUILD_VERSION__"}' > _site/version.json
+
+      - name: 蓋上版本號 🔖
+        # 版本號用「提交時間＋提交雜湊」：同一個提交重跑部署，版本不變，不會被誤判成新版而一再提示更新
+        run: python3 .github/stamp_version.py _site "$(TZ=Asia/Taipei date -d "@$(git log -1 --format=%ct)" +%Y.%m.%d-%H%M)-${GITHUB_SHA::7}"
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deployment
+        uses: actions/deploy-pages@v4

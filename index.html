@@ -1,0 +1,3088 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>字戰星河｜全漢字橫向捲軸射擊遊戲・八大幕星河遠征</title>
+  <meta name="description" content="每個敵機、子彈、爆炸都是一個漢字！駕駛文字戰機穿越八大星域，用「狙」追蹤雷射、「捕」收編副機，擊敗最終魔王「源」。電腦、平板、手機免安裝就能玩。" />
+  <meta name="theme-color" content="#020617" />
+  <meta name="build-version" content="__BUILD_VERSION__" />
+  <link rel="icon" href="favicon.ico?v=__BUILD_VERSION__" sizes="32x32" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=__BUILD_VERSION__" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png?v=__BUILD_VERSION__" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="字戰星河" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <link rel="canonical" href="https://cagoooo.github.io/zizhan-xinghe/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="字戰星河" />
+  <meta property="og:locale" content="zh_TW" />
+  <meta property="og:url" content="https://cagoooo.github.io/zizhan-xinghe/" />
+  <meta property="og:title" content="字戰星河｜全漢字橫向捲軸射擊遊戲" />
+  <meta property="og:description" content="每個敵機、子彈、爆炸都是一個漢字！駕駛文字戰機穿越八大星域，用「狙」追蹤雷射、「捕」收編副機，擊敗最終魔王「源」。電腦、平板、手機免安裝就能玩。" />
+  <meta property="og:image" content="https://cagoooo.github.io/zizhan-xinghe/og-image.jpg?v=__BUILD_VERSION__" />
+  <meta property="og:image:secure_url" content="https://cagoooo.github.io/zizhan-xinghe/og-image.jpg?v=__BUILD_VERSION__" />
+  <meta property="og:image:type" content="image/jpeg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="字戰星河遊戲畫面：漢字戰機「勇」在星河中迎戰漢字敵機" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="字戰星河｜全漢字橫向捲軸射擊遊戲" />
+  <meta name="twitter:description" content="每個敵機、子彈、爆炸都是一個漢字！駕駛文字戰機穿越八大星域，用「狙」追蹤雷射、「捕」收編副機，擊敗最終魔王「源」。電腦、平板、手機免安裝就能玩。" />
+  <meta name="twitter:image" content="https://cagoooo.github.io/zizhan-xinghe/og-image.jpg?v=__BUILD_VERSION__" />
+  <meta name="twitter:image:alt" content="字戰星河遊戲畫面：漢字戰機「勇」在星河中迎戰漢字敵機" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@500;700;900&family=Noto+Serif+TC:wght@700;900&family=Zen+Maru+Gothic:wght@700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      color-scheme: dark;
+    }
+
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      min-height: 100vh;
+      background: radial-gradient(circle at 50% 20%, #0f172a 0%, #020617 70%, #000000 100%);
+      color: #f8fafc;
+      font-family: 'Noto Sans TC', sans-serif;
+      overflow-x: hidden;
+    }
+
+    #game-wrapper {
+      width: 100%;
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 10px 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    /* 全螢幕樣式（支援原生 Fullscreen API 與 iframe CSS 降級滿版） */
+    #game-wrapper.is-fullscreen,
+    #game-wrapper:fullscreen,
+    #game-wrapper:-webkit-full-screen {
+      position: fixed !important;
+      inset: 0 !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      max-width: none !important;
+      margin: 0 !important;
+      padding: 8px 12px !important;
+      background: #020617 !important;
+      z-index: 9999 !important;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    #game-wrapper.is-fullscreen header,
+    #game-wrapper:fullscreen header,
+    #game-wrapper:-webkit-full-screen header,
+    #game-wrapper.is-fullscreen footer,
+    #game-wrapper:fullscreen footer,
+    #game-wrapper:-webkit-full-screen footer {
+      width: 100%;
+      max-width: 1180px;
+    }
+
+    #canvas-container {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: #020617;
+      border-radius: 12px;
+      border: 2px solid #334155;
+      box-shadow: 0 0 36px rgba(56, 189, 248, 0.14), inset 0 0 24px rgba(0, 0, 0, 0.8);
+      overflow: hidden;
+    }
+
+    #game-wrapper.is-fullscreen #canvas-container,
+    #game-wrapper:fullscreen #canvas-container,
+    #game-wrapper:-webkit-full-screen #canvas-container {
+      width: min(100%, calc((100vh - 118px) * 16 / 9)) !important;
+      height: auto !important;
+      max-width: 100% !important;
+      max-height: calc(100vh - 118px) !important;
+      aspect-ratio: 16 / 9 !important;
+      flex: 0 1 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      background: #020617;
+      cursor: crosshair;
+      touch-action: none;
+    }
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(2, 6, 23, 0.9);
+      backdrop-filter: blur(5px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 16px;
+      text-align: center;
+      z-index: 20;
+      overflow-y: auto;
+    }
+
+    .hidden-el {
+      display: none !important;
+    }
+
+    .kanji-title {
+      text-shadow: 0 0 18px rgba(56, 189, 248, 0.65), 0 4px 0 #0f172a;
+      letter-spacing: 0.12em;
+    }
+
+    .secret-char {
+      cursor: pointer;
+      display: inline-block;
+      transition: transform 0.2s, color 0.2s;
+    }
+
+    .secret-char:hover {
+      color: #fde047;
+      transform: scale(1.12);
+    }
+
+    .retro-btn {
+      border-radius: 10px;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      font-weight: 700;
+      transition: transform 0.12s ease, box-shadow 0.15s ease, filter 0.15s ease;
+      box-shadow: 0 3px 0 rgba(0, 0, 0, 0.55);
+      cursor: pointer;
+    }
+
+    .retro-btn:hover {
+      filter: brightness(1.12);
+      transform: translateY(-1px);
+    }
+
+    .retro-btn:active {
+      transform: translateY(1px);
+      box-shadow: 0 1px 0 rgba(0, 0, 0, 0.6);
+    }
+
+    .ship-card {
+      border-radius: 10px;
+      border: 1px solid #334155;
+      background: rgba(15, 23, 42, 0.88);
+      transition: all 0.15s ease;
+      cursor: pointer;
+    }
+
+    .ship-card:hover {
+      border-color: #38bdf8;
+      background: rgba(30, 41, 59, 0.95);
+    }
+
+    .ship-card.selected {
+      border-color: #38bdf8;
+      background: rgba(14, 116, 144, 0.32);
+      box-shadow: 0 0 14px rgba(56, 189, 248, 0.35);
+    }
+
+    .stage-btn {
+      border-radius: 8px;
+      border: 1px solid #334155;
+      background: rgba(15, 23, 42, 0.85);
+      transition: all 0.15s ease;
+      cursor: pointer;
+    }
+
+    .stage-btn.selected {
+      border-color: #facc15;
+      background: rgba(202, 138, 4, 0.28);
+      box-shadow: 0 0 10px rgba(250, 204, 21, 0.3);
+    }
+
+    .dex-scroll {
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: #475569 #0f172a;
+    }
+
+    .dex-card {
+      border-radius: 8px;
+      border: 1px solid #334155;
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    .dex-card.captured {
+      border-color: rgba(52, 211, 153, 0.65);
+      background: rgba(6, 78, 59, 0.28);
+    }
+
+    /* 手機虛擬操作列 */
+    @media (hover: hover) and (pointer: fine) {
+      #mobile-controls {
+        display: none;
+      }
+    }
+
+    /* ===================== RWD 與細節（2026-11-27） ===================== */
+    #game-wrapper {
+      padding-left: max(12px, env(safe-area-inset-left));
+      padding-right: max(12px, env(safe-area-inset-right));
+    }
+    #game-wrapper > footer .retro-btn { min-height: 38px; }
+
+    /* 直式手機提示：建議橫放 */
+    #rotate-hint { display: none; }
+    @media (orientation: portrait) and (max-width: 767px) {
+      #rotate-hint {
+        display: flex; align-items: center; justify-content: center; gap: 8px;
+        font-size: 14px; color: #cbd5e1; text-align: center;
+        background: rgba(30, 41, 59, 0.85); border: 1px dashed #475569;
+        border-radius: 10px; padding: 8px 12px;
+      }
+    }
+
+    /* 觸控裝置：按鈕放大到手指好按（至少 44px） */
+    @media (hover: none), (pointer: coarse) {
+      #game-wrapper > footer .retro-btn,
+      #mobile-controls .retro-btn { min-height: 48px; font-size: 14px; }
+      .stage-btn, .diff-btn, .dex-tab { min-height: 38px; padding-left: 0.7rem !important; padding-right: 0.7rem !important; }
+      .ship-card { min-height: 72px; justify-content: center; }
+      .overlay .retro-btn { min-height: 46px; }
+    }
+
+    /* 小螢幕：畫布太矮放不下選單，選單類畫面改成滿版、字放大 */
+    @media (max-width: 767px), (max-height: 520px) {
+      #overlay-title, #overlay-dex, #overlay-pause, #overlay-gameover, #overlay-victory {
+        position: fixed;
+        inset: 0;
+        z-index: 60;
+        gap: 14px;
+        justify-content: flex-start;
+        background: radial-gradient(circle at 50% 0%, #0f172a 0%, #020617 75%);
+        padding: max(16px, env(safe-area-inset-top)) max(14px, env(safe-area-inset-right)) max(20px, env(safe-area-inset-bottom)) max(14px, env(safe-area-inset-left));
+      }
+      #overlay-pause, #overlay-gameover, #overlay-victory { justify-content: center; }
+      .overlay .text-\[10px\] { font-size: 13px !important; line-height: 1.5; }
+      .overlay .text-\[11px\] { font-size: 14px !important; line-height: 1.5; }
+      .overlay .text-xs { font-size: 14px !important; }
+      #overlay-title h1 { font-size: 2.6rem; }
+      #secret-hint { height: auto !important; }
+      #dex-grid { flex: none; overflow: visible; }
+    }
+
+    /* 橫放手機：畫布高度貼齊螢幕，「狙」「捕」按鈕移到畫布兩側 */
+    @media (orientation: landscape) and (max-height: 520px) {
+      #game-wrapper { max-width: none; padding-top: 4px; padding-bottom: 4px; gap: 4px; }
+      #game-wrapper > header { padding-top: 2px; padding-bottom: 2px; }
+      #canvas-container { width: min(100%, calc((100dvh - 46px) * 16 / 9)); margin: 0 auto; }
+      #mobile-controls {
+        position: fixed; left: 0; right: 0; bottom: max(10px, env(safe-area-inset-bottom));
+        display: flex; justify-content: space-between; gap: 0;
+        padding: 0 max(8px, env(safe-area-inset-right)) 0 max(8px, env(safe-area-inset-left));
+        pointer-events: none; z-index: 40;
+      }
+      #mobile-controls .retro-btn {
+        pointer-events: auto; width: max(84px, calc((100vw - (100dvh - 46px) * 16 / 9) / 2 - 18px)); max-width: 160px;
+        min-height: 72px; padding: 6px; font-size: 13px; line-height: 1.35; opacity: 0.92;
+      }
+    }
+
+    /* 網頁頁尾（遊戲進行中隱藏） */
+    body.in-game .site-footer { display: none; }
+    .site-footer {
+      margin-top: 18px;
+      background: linear-gradient(180deg, #0b1224 0%, #070d1c 100%);
+      border-top: 1px solid #1e293b;
+      position: relative;
+      color: #cbd5e1;
+    }
+    .site-footer::before {
+      content: ""; position: absolute; left: 0; right: 0; top: -1px; height: 4px;
+      background: linear-gradient(90deg, #38bdf8, #a78bfa, #fde047);
+    }
+    .footer-inner {
+      max-width: 1040px; margin: 0 auto; padding: 26px 16px 18px;
+      display: grid; grid-template-columns: 1.1fr 2fr 0.9fr; gap: 22px; align-items: start;
+    }
+    .footer-brand { display: flex; gap: 12px; align-items: center; }
+    .footer-brand img { width: 48px; height: 48px; border-radius: 12px; box-shadow: 0 6px 18px rgba(56, 189, 248, 0.25); }
+    .footer-brand strong { display: block; font-size: 19px; color: #f8fafc; letter-spacing: 0.08em; }
+    .footer-brand span { font-size: 14px; color: #94a3b8; }
+    .footer-points { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .footer-points li { display: flex; gap: 10px; align-items: flex-start; background: rgba(15, 23, 42, 0.7); border: 1px solid #1e293b; border-radius: 12px; padding: 10px 12px; }
+    .fp-icon { font-size: 22px; line-height: 1; }
+    .footer-points strong { display: block; font-size: 15px; color: #f1f5f9; }
+    .footer-points small { font-size: 13px; color: #94a3b8; line-height: 1.5; }
+    .footer-links { display: flex; flex-direction: column; gap: 8px; }
+    .footer-link {
+      cursor: pointer; text-align: left; font-size: 14px; color: #e2e8f0; background: rgba(30, 41, 59, 0.7);
+      border: 1px solid #334155; border-radius: 999px; padding: 8px 14px; min-height: 40px;
+    }
+    .footer-link:hover { border-color: #38bdf8; color: #fff; }
+    .footer-bottom {
+      max-width: 1040px; margin: 0 auto; padding: 12px 16px max(18px, env(safe-area-inset-bottom));
+      border-top: 1px solid #1e293b; display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap;
+      font-size: 14px; color: #94a3b8;
+    }
+    .site-credit { margin: 0; }
+    .site-credit__heart { display: inline-block; margin: 0 2px; letter-spacing: normal; text-transform: none; }
+    .site-credit__author { color: #e2e8f0; text-decoration: none; border-bottom: 1px dotted currentColor; padding-bottom: 1px; transition: color .2s; }
+    .site-credit__author:hover { color: #fde047; }
+    .footer-note { margin: 0; font-size: 13px; color: #64748b; }
+    .version-tag { margin: 0; font-size: 12px; font-family: ui-monospace, monospace; color: #cbd5e1; background: rgba(255, 255, 255, 0.06); border: 1px solid #334155; border-radius: 999px; padding: 3px 10px; }
+    @media (max-width: 1100px) {
+      .footer-inner { grid-template-columns: 1fr 1fr; }
+      .footer-points { grid-column: 1 / -1; grid-row: 2; }
+      .footer-links { flex-direction: row; flex-wrap: wrap; justify-content: flex-end; }
+    }
+    @media (max-width: 600px) {
+      .footer-inner { grid-template-columns: 1fr; }
+      .footer-points { grid-template-columns: 1fr; grid-row: auto; }
+      .footer-links { justify-content: flex-start; }
+      .footer-bottom { flex-direction: column; text-align: center; }
+      .footer-dot { display: none; }
+      .footer-school { display: block; }
+    }
+
+    /* 新版本提示列：桌機上方置中膠囊，手機改為底部滿寬卡片 */
+    #sw-update-bar {
+      position: fixed; left: 50%; top: max(14px, env(safe-area-inset-top)); transform: translateX(-50%); z-index: 10001;
+      display: flex; align-items: center; gap: 14px; width: max-content; max-width: calc(100vw - 24px);
+      background: #0f172a; color: #f8fafc; border: 1px solid #38bdf8; border-radius: 16px;
+      padding: 10px 12px 10px 18px; box-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.7), 0 0 0 4px rgba(56, 189, 248, 0.15);
+      font: 500 15px 'Noto Sans TC', sans-serif; animation: sw-in .35s ease-out;
+    }
+    #sw-update-bar .sw-msg { display: flex; flex-direction: column; line-height: 1.4; }
+    #sw-update-bar .sw-msg b { font-size: 16px; color: #fde047; }
+    #sw-update-bar .sw-msg small { font-size: 13px; color: #94a3b8; }
+    #sw-update-bar button { cursor: pointer; font: 700 15px 'Noto Sans TC', sans-serif; border: 0; border-radius: 10px; }
+    #sw-go { order: 2; background: linear-gradient(135deg, #fde047, #fb923c); color: #3b2a00; padding: 10px 16px; min-height: 44px; }
+    #sw-x { order: 3; background: transparent; color: #94a3b8; width: 44px; height: 44px; font-size: 18px; }
+    #sw-go:focus-visible, #sw-x:focus-visible { outline: 3px solid #38bdf8; outline-offset: 2px; }
+    @keyframes sw-in { from { opacity: 0; transform: translate(-50%, -10px); } to { opacity: 1; transform: translate(-50%, 0); } }
+    @media (max-width: 560px) {
+      #sw-update-bar {
+        left: 12px; right: 12px; top: auto; bottom: max(12px, env(safe-area-inset-bottom)); transform: none; width: auto;
+        display: grid; grid-template-columns: 1fr auto; grid-template-areas: "msg x" "go go"; gap: 10px; padding: 14px 14px 14px 18px;
+        animation: none;
+      }
+      #sw-update-bar .sw-msg { grid-area: msg; }
+      #sw-x { grid-area: x; }
+      #sw-go { grid-area: go; width: 100%; min-height: 48px; }
+    }
+    @media (prefers-reduced-motion: reduce) { #sw-update-bar { animation: none; } }
+
+    /* 觸控專用說明、橫式暫停鈕 */
+    .touch-only { display: none; }
+    #btn-touch-pause { display: none; }
+    @media (hover: none), (pointer: coarse) {
+      .touch-only { display: block; }
+      #btn-capture { display: none; }
+    }
+    @media (orientation: landscape) and (max-height: 520px) {
+      #mobile-controls #btn-touch-pause {
+        display: block; position: fixed; top: max(46px, env(safe-area-inset-top)); left: max(8px, env(safe-area-inset-left));
+        min-height: 48px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="game-wrapper">
+    <!-- 頂部 HUD 狀態列 -->
+    <header class="bg-slate-900/90 border border-slate-700/80 rounded-xl px-3 py-1.5 flex flex-wrap items-center justify-between gap-2 text-xs sm:text-sm">
+      <div class="flex items-center gap-3">
+        <div class="font-black text-cyan-300 tracking-wider">字戰星河</div>
+        <div id="hud-stage" class="text-amber-300 font-bold">第一幕・都城</div>
+        <div id="hud-diff" class="text-[11px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 font-bold">普通</div>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-3 sm:gap-4 font-mono">
+        <div>
+          <span class="text-slate-400 text-[11px]">分數 </span>
+          <span id="hud-score" class="text-white font-bold">0</span>
+        </div>
+        <div>
+          <span class="text-slate-400 text-[11px]">最高 </span>
+          <span id="hud-highscore" class="text-yellow-300 font-bold">0</span>
+        </div>
+        <div>
+          <span class="text-slate-400 text-[11px]">生命 </span>
+          <span id="hud-lives" class="text-emerald-300 font-bold">勇勇勇</span>
+        </div>
+        <div>
+          <span class="text-slate-400 text-[11px]">捕獲 </span>
+          <span id="hud-capture" class="text-rose-300 font-bold">捕獲 可</span>
+        </div>
+        <div class="hidden md:block">
+          <span class="text-slate-400 text-[11px]">強化 </span>
+          <span id="hud-power" class="text-cyan-300 font-bold">速1 雙1 銳0 勳x1</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- 遊戲主畫布容器 -->
+    <main id="canvas-container">
+      <canvas id="game-canvas"></canvas>
+
+      <!-- 標題畫面覆蓋層 -->
+      <div id="overlay-title" class="overlay justify-between py-2.5 sm:py-4">
+        <div>
+          <div class="text-[10px] sm:text-xs tracking-[0.28em] text-cyan-400 font-bold">全漢字橫向捲軸射擊・八大幕星河遠征</div>
+          <h1 class="text-3xl sm:text-5xl font-black text-white kanji-title my-0.5">
+            字戰星<span id="secret-unlock" class="secret-char" title="點擊解鎖隱藏機體！">河</span>
+          </h1>
+          <div id="secret-hint" class="text-[10px] sm:text-xs text-slate-400 h-4">
+            駕駛文字戰機穿越八大星域・「狙」追蹤雷射・「捕」收編副機・擊敗最終魔王「源」
+          </div>
+        </div>
+
+        <!-- 我機、難度與八大幕次選擇 -->
+        <div class="w-full max-w-3xl my-1 flex flex-col gap-1.5">
+          <div class="grid grid-cols-3 sm:grid-cols-4 gap-1.5 sm:gap-2">
+            <button data-ship="geki" class="ship-card selected p-1.5 sm:p-2 flex flex-col items-center">
+              <span class="text-2xl font-black text-cyan-300">勇</span>
+              <span class="text-xs font-bold text-white">平衡型</span>
+              <span class="text-[10px] text-slate-400">標準高速連射</span>
+            </button>
+            <button data-ship="ha" class="ship-card p-1.5 sm:p-2 flex flex-col items-center">
+              <span class="text-2xl font-black text-orange-400">剛</span>
+              <span class="text-xs font-bold text-white">高火力型</span>
+              <span class="text-[10px] text-slate-400">高威穿透砲彈</span>
+            </button>
+            <button data-ship="den" class="ship-card p-1.5 sm:p-2 flex flex-col items-center">
+              <span class="text-2xl font-black text-emerald-300">疾</span>
+              <span class="text-xs font-bold text-white">高速機敏</span>
+              <span class="text-[10px] text-slate-400">高移速＋追蹤</span>
+            </button>
+            <button id="ship-kiwami" data-ship="kiwami" class="ship-card hidden-el p-1.5 sm:p-2 flex flex-col items-center border-yellow-400">
+              <span class="text-2xl font-black text-yellow-300">曜</span>
+              <span class="text-xs font-bold text-yellow-200">★ 隱藏機</span>
+              <span class="text-[10px] text-amber-200">全方位極致火力</span>
+            </button>
+          </div>
+
+          <!-- 難度與出發幕次選擇 -->
+          <div class="flex flex-wrap items-center justify-center gap-1 text-[11px]">
+            <span class="text-slate-400 font-bold mr-0.5">難度：</span>
+            <button data-diff="easy" class="diff-btn stage-btn px-2 py-0.5 text-emerald-300 font-bold">簡單</button>
+            <button data-diff="normal" class="diff-btn stage-btn selected px-2 py-0.5 text-amber-200 font-bold">普通</button>
+            <button data-diff="hard" class="diff-btn stage-btn px-2 py-0.5 text-rose-300 font-bold">困難</button>
+            <span class="text-slate-600 mx-1">|</span>
+            <span class="text-slate-400 font-bold mr-0.5">出發幕次：</span>
+            <button data-stage="1" class="stage-btn selected px-2 py-0.5 text-cyan-200 font-bold">一・都城</button>
+            <button data-stage="2" class="stage-btn px-2 py-0.5 text-emerald-200 font-bold">二・樹海</button>
+            <button data-stage="3" class="stage-btn px-2 py-0.5 text-purple-200 font-bold">三・冥府</button>
+            <button data-stage="4" class="stage-btn px-2 py-0.5 text-sky-300 font-bold">四・深海</button>
+            <button data-stage="5" class="stage-btn px-2 py-0.5 text-amber-200 font-bold">五・天空</button>
+            <button data-stage="6" class="stage-btn px-2 py-0.5 text-orange-300 font-bold">六・熔岩</button>
+            <button data-stage="7" class="stage-btn px-2 py-0.5 text-indigo-300 font-bold">七・星海</button>
+            <button data-stage="8" class="stage-btn px-2 py-0.5 text-yellow-300 font-bold">八・根源</button>
+          </div>
+        </div>
+
+        <!-- 操作提示與出擊按鈕 -->
+        <div class="w-full max-w-3xl flex flex-col sm:flex-row items-center gap-2">
+          <div class="flex-1 bg-slate-950/90 border border-slate-800 rounded-lg px-2.5 py-1.5 text-[10px] sm:text-[11px] text-slate-300 text-left leading-snug">
+            <div class="touch-only"><span class="text-emerald-300 font-bold">📱 手指操作：</span>在畫面上拖曳移動（預設自動連射）・按住「狙」鎖定敵機・按「捕」收編副機</div>
+            <div><span class="text-cyan-300 font-bold">射擊／移動：</span>滑鼠或方向鍵/WASD・左鍵/C 射擊（F 自動連射・I 圖鑑）</div>
+            <div><span class="text-yellow-300 font-bold">狙擊雷射：</span>按住右鍵/V 停下並展開「狙」鎖定敵機，放開即射（附無敵時間）</div>
+            <div><span class="text-rose-300 font-bold">捕獲／自爆：</span>左右鍵齊按或 B 發射「捕」收編副機；再按 B/Z 自爆（最終幕需靠「究」擊破「源」）</div>
+          </div>
+          <div class="flex items-center gap-1.5 w-full sm:w-auto">
+            <button id="btn-title-dex" class="retro-btn bg-amber-900/80 text-amber-200 px-3 py-2.5 text-xs whitespace-nowrap">
+              📖 圖鑑 (I)
+            </button>
+            <button id="btn-title-fullscreen" class="retro-btn bg-slate-800 text-cyan-200 px-3 py-2.5 text-xs whitespace-nowrap">
+              ⛶ 全螢幕
+            </button>
+            <button id="btn-start" class="retro-btn bg-gradient-to-b from-red-500 to-red-700 text-white px-6 py-2.5 text-sm sm:text-base tracking-[0.18em] flex-1 sm:flex-none shadow-lg shadow-red-900/40 whitespace-nowrap">
+              🚀 出擊！
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 捕獲圖鑑覆蓋層 -->
+      <div id="overlay-dex" class="overlay hidden-el justify-start py-3">
+        <div class="w-full max-w-3xl flex items-center justify-between border-b border-slate-700 pb-2 mb-2">
+          <div class="text-left">
+            <h2 class="text-lg sm:text-xl font-black text-amber-300">敵機捕獲圖鑑 <span id="dex-progress" class="text-xs text-cyan-300 font-mono ml-2">0 / 0</span></h2>
+            <p class="text-[10px] text-slate-400">收錄第一～八幕全部可捕獲與不可捕獲敵機（捕獲紀錄自動保存）</p>
+          </div>
+          <button id="btn-dex-close" class="retro-btn bg-slate-700 text-white px-3 py-1.5 text-xs">關閉 (I)</button>
+        </div>
+        <div class="w-full max-w-3xl flex flex-wrap gap-1.5 mb-2 text-[11px]">
+          <button data-dextab="1" class="dex-tab stage-btn selected px-2.5 py-1 text-cyan-200 font-bold">一・都城</button>
+          <button data-dextab="2" class="dex-tab stage-btn px-2.5 py-1 text-emerald-200 font-bold">二・樹海</button>
+          <button data-dextab="3" class="dex-tab stage-btn px-2.5 py-1 text-purple-200 font-bold">三・冥府</button>
+          <button data-dextab="4" class="dex-tab stage-btn px-2.5 py-1 text-sky-300 font-bold">四・深海</button>
+          <button data-dextab="5" class="dex-tab stage-btn px-2.5 py-1 text-amber-200 font-bold">五・天空</button>
+          <button data-dextab="6" class="dex-tab stage-btn px-2.5 py-1 text-orange-300 font-bold">六・熔岩</button>
+          <button data-dextab="7" class="dex-tab stage-btn px-2.5 py-1 text-indigo-300 font-bold">七・星海</button>
+          <button data-dextab="8" class="dex-tab stage-btn px-2.5 py-1 text-yellow-300 font-bold">八・根源</button>
+        </div>
+        <div id="dex-grid" class="dex-scroll w-full max-w-3xl flex-1 grid grid-cols-1 sm:grid-cols-2 gap-1.5 pr-1 text-left"></div>
+      </div>
+
+      <!-- 暫停畫面 -->
+      <div id="overlay-pause" class="overlay hidden-el">
+        <h2 class="text-4xl font-black text-cyan-300 kanji-title mb-2">暫　停</h2>
+        <p class="text-slate-400 text-xs mb-5">按 P 鍵或點擊下方按鈕繼續出擊</p>
+        <div class="flex flex-wrap justify-center gap-2.5">
+          <button id="btn-resume" class="retro-btn bg-cyan-600 text-white px-5 py-2 text-sm">繼續戰鬥</button>
+          <button id="btn-pause-dex" class="retro-btn bg-amber-800 text-amber-100 px-5 py-2 text-sm">查看圖鑑</button>
+          <button id="btn-pause-title" class="retro-btn bg-slate-700 text-slate-200 px-5 py-2 text-sm">返回標題</button>
+        </div>
+      </div>
+
+      <!-- 戰敗畫面 -->
+      <div id="overlay-gameover" class="overlay hidden-el">
+        <div class="text-xs tracking-[0.28em] text-rose-400 font-bold mb-1">MISSION FAILED</div>
+        <h2 class="text-4xl sm:text-5xl font-black text-rose-500 kanji-title mb-2">戰機被擊落</h2>
+        <p class="text-slate-300 text-xs sm:text-sm mb-4">善用「狙」追蹤雷射與「捕」副機自爆的無敵時間突破彈幕！</p>
+        <div class="bg-slate-950/90 border border-slate-800 rounded-lg px-6 py-3 mb-4 text-sm space-y-1">
+          <div>最終分數：<span id="over-score" class="text-yellow-300 font-mono font-bold">0</span></div>
+          <div>到達幕次：<span id="over-stage" class="text-cyan-300 font-bold">第一幕・都城</span></div>
+          <div>歷史最高：<span id="over-highscore" class="text-emerald-300 font-mono font-bold">0</span></div>
+        </div>
+        <div class="flex gap-3">
+          <button id="btn-retry" class="retro-btn bg-gradient-to-b from-red-500 to-red-700 text-white px-6 py-2.5 text-sm">再度出擊</button>
+          <button id="btn-over-title" class="retro-btn bg-slate-700 text-slate-200 px-5 py-2.5 text-sm">返回標題</button>
+        </div>
+      </div>
+
+      <!-- 全破畫面 -->
+      <div id="overlay-victory" class="overlay hidden-el">
+        <div id="victory-tag" class="text-xs tracking-[0.25em] text-yellow-300 font-bold mb-1">ALL 8 STAGES CLEARED</div>
+        <h2 id="victory-title" class="text-4xl sm:text-5xl font-black text-yellow-300 kanji-title mb-2">完全擊破！</h2>
+        <p id="victory-desc" class="text-slate-300 text-xs sm:text-sm mb-4 max-w-md">
+          你成功以「究」之力斬斷最終魔王「源」，為全漢字宇宙帶來永恆和平！
+        </p>
+        <div class="bg-slate-950/90 border border-yellow-500/40 rounded-lg px-6 py-3 mb-4 text-sm space-y-1">
+          <div>最終分數：<span id="victory-score" class="text-yellow-300 font-mono font-bold">0</span></div>
+          <div>歷史最高：<span id="victory-highscore" class="text-emerald-300 font-mono font-bold">0</span></div>
+        </div>
+        <div class="flex gap-3">
+          <button id="btn-next-loop" class="retro-btn bg-gradient-to-b from-amber-500 to-orange-600 text-white px-5 py-2.5 text-sm">挑戰第二輪</button>
+          <button id="btn-victory-title" class="retro-btn bg-slate-700 text-slate-200 px-5 py-2.5 text-sm">返回標題</button>
+        </div>
+      </div>
+    </main>
+
+    <div id="rotate-hint">📱 把手機橫放，或按下方「全螢幕」，畫面會更大更好玩</div>
+
+    <!-- 觸控裝置快捷鍵列（僅在觸控螢幕顯示） -->
+    <div id="mobile-controls" class="grid grid-cols-2 gap-2 text-xs">
+      <button id="btn-touch-lock" class="retro-btn bg-amber-700/90 text-amber-100 py-3">
+        🎯 按住「狙」追蹤鎖定
+      </button>
+      <button id="btn-touch-pause" class="retro-btn bg-slate-800/90 text-slate-100 py-2" aria-label="暫停">⏸ 暫停</button>
+      <button id="btn-touch-capture" class="retro-btn bg-rose-700/90 text-rose-100 py-3">
+        ⚡ 發射「捕」／副機自爆
+      </button>
+    </div>
+
+    <!-- 底部功能控制列（畫布外部） -->
+    <footer class="grid grid-cols-3 sm:grid-cols-7 gap-1.5 text-[11px] sm:text-xs">
+      <button id="btn-capture" class="retro-btn bg-gradient-to-b from-rose-500 to-rose-700 text-white py-2 px-1.5">
+        ⚡ 捕獲／自爆 (B)
+      </button>
+      <button id="btn-dex" class="retro-btn bg-amber-900/80 text-amber-100 py-2 px-1.5">
+        📖 圖鑑 (I)
+      </button>
+      <button id="btn-font" class="retro-btn bg-slate-800 text-cyan-200 py-2 px-1.5">
+        字型：粗黑 (T)
+      </button>
+      <button id="btn-autofire" class="retro-btn bg-slate-800 text-amber-200 py-2 px-1.5">
+        自動射：開 (F)
+      </button>
+      <button id="btn-mute" class="retro-btn bg-slate-800 text-slate-200 py-2 px-1.5">
+        音效：標準
+      </button>
+      <button id="btn-pause" class="retro-btn bg-slate-800 text-slate-200 py-2 px-1.5">
+        暫停 (P)
+      </button>
+      <button id="btn-fullscreen" class="retro-btn bg-indigo-900/80 text-indigo-100 py-2 px-1.5 col-span-3 sm:col-span-1">
+        ⛶ 全螢幕 (M)
+      </button>
+    </footer>
+  </div>
+
+  <!-- 網頁頁尾（開始畫面顯示、遊戲進行中隱藏） -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <img src="favicon.svg" alt="" width="48" height="48" />
+        <div><strong>字戰星河</strong><span>每一架敵機都是一個字的星河射擊冒險</span></div>
+      </div>
+      <ul class="footer-points">
+        <li><span class="fp-icon">🎮</span><div><strong>免安裝就能玩</strong><small>電腦用滑鼠鍵盤，平板手機用手指拖曳</small></div></li>
+        <li><span class="fp-icon">🈶</span><div><strong>邊玩邊認字</strong><small>敵機的字就是它的個性，圖鑑可回顧 78 種字</small></div></li>
+        <li><span class="fp-icon">💾</span><div><strong>紀錄留在本機</strong><small>最高分與圖鑑只存在這台裝置，不上傳</small></div></li>
+      </ul>
+      <nav class="footer-links" aria-label="快速連結">
+        <button type="button" class="footer-link" id="footer-dex">📖 敵機圖鑑</button>
+        <button type="button" class="footer-link" id="footer-fullscreen">⛶ 全螢幕遊玩</button>
+        <button type="button" class="footer-link" id="footer-top">⬆️ 回到遊戲</button>
+      </nav>
+    </div>
+    <div class="footer-bottom">
+      <p class="site-credit">Made with <span class="site-credit__heart" aria-label="愛心">❤️</span> by
+        <a href="https://cagoooo.github.io/Akai/" target="_blank" rel="noopener noreferrer" class="site-credit__author">阿凱老師</a>
+        <span class="footer-school"><span class="footer-dot" aria-hidden="true">・</span>桃園市龍潭區石門國民小學</span></p>
+      <p class="footer-note">向全漢字射擊遊戲的先驅《擊破傳》（宮本達也）致敬，本作關卡與配字為原創</p>
+      <p class="version-tag" id="version-tag">v__BUILD_VERSION__</p>
+    </div>
+  </footer>
+
+  <script src="sw-register.js?v=__BUILD_VERSION__"></script>
+
+  <script>
+    // ============================================================================
+    // 《字戰星河》核心常數、畫布初始化與工具函式
+    // ============================================================================
+    const W = 960;
+    const H = 540;
+
+    const wrapper = document.getElementById('game-wrapper');
+    const container = document.getElementById('canvas-container');
+    const canvas = document.getElementById('game-canvas');
+    const ctx = canvas.getContext('2d');
+
+    // 四種字型即時切換（換字型就換一種戰場氣氛）
+    const FONTS = [
+      { name: '粗黑', family: '"Noto Sans TC", sans-serif', weight: '900' },
+      { name: '明體', family: '"Noto Serif TC", "PMingLiU", serif', weight: '900' },
+      { name: '楷體', family: '"BiauKai", "DFKai-SB", "KaiTi", serif', weight: '700' },
+      { name: '圓體', family: '"Zen Maru Gothic", "Noto Sans TC", sans-serif', weight: '900' }
+    ];
+    let currentFontIdx = 0;
+
+    function getFont(size) {
+      const f = FONTS[currentFontIdx];
+      return `${f.weight} ${size}px ${f.family}`;
+    }
+
+    function resizeCanvas() {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = W * dpr;
+      canvas.height = H * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+
+    function getCanvasCoords(clientX, clientY) {
+      const rect = canvas.getBoundingClientRect();
+      return {
+        x: ((clientX - rect.left) / rect.width) * W,
+        y: ((clientY - rect.top) / rect.height) * H
+      };
+    }
+
+    // ============================================================================
+    // Web Audio API 復古音效引擎（音效按鈕可切換標準／8-bit 音色）
+    // ============================================================================
+    class SoundEngine {
+      constructor() {
+        this.ctx = null;
+        this.masterGain = null;
+        this.muted = false;
+        this.famicomMode = false;
+      }
+
+      init() {
+        try {
+          if (!this.ctx) {
+            const AC = window.AudioContext || window.webkitAudioContext;
+            if (AC) {
+              this.ctx = new AC();
+              this.masterGain = this.ctx.createGain();
+              this.masterGain.gain.value = 0.7;
+              this.masterGain.connect(this.ctx.destination);
+            }
+          }
+          if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume();
+        } catch (e) {}
+      }
+
+      tone(freq, type, dur, vol = 0.08, slide = null) {
+        if (this.muted || !this.ctx || !this.masterGain) return;
+        try {
+          const now = this.ctx.currentTime;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = this.famicomMode ? 'square' : type;
+          const f = this.famicomMode ? freq * 1.12 : freq;
+          osc.frequency.setValueAtTime(f, now);
+          if (slide) {
+            const s = this.famicomMode ? slide * 1.12 : slide;
+            osc.frequency.exponentialRampToValueAtTime(Math.max(20, s), now + dur);
+          }
+          gain.gain.setValueAtTime(vol, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + dur);
+          osc.connect(gain);
+          gain.connect(this.masterGain);
+          osc.start(now);
+          osc.stop(now + dur);
+        } catch (e) {}
+      }
+
+      blip() { this.tone(660, 'square', 0.05, 0.06, 880); }
+      shoot() { this.tone(720, 'triangle', 0.045, 0.05, 280); }
+      hit() { this.tone(240, 'sawtooth', 0.045, 0.05, 110); }
+      boom() { this.tone(150, 'sawtooth', 0.16, 0.09, 36); }
+      bigBoom() {
+        this.tone(120, 'sawtooth', 0.32, 0.12, 24);
+        setTimeout(() => this.tone(85, 'square', 0.28, 0.1, 22), 70);
+      }
+      lockOn() { this.tone(980, 'square', 0.05, 0.06, 1480); }
+      homingLaser() {
+        this.tone(1100, 'sawtooth', 0.24, 0.09, 320);
+        setTimeout(() => this.tone(820, 'triangle', 0.2, 0.08, 1400), 60);
+      }
+      captureShot() { this.tone(420, 'sine', 0.22, 0.09, 1080); }
+      captured() {
+        [523, 659, 987].forEach((f, i) => setTimeout(() => this.tone(f, 'triangle', 0.09, 0.09), i * 55));
+      }
+      bomb() {
+        this.tone(180, 'sawtooth', 0.4, 0.13, 30);
+        setTimeout(() => this.tone(440, 'square', 0.24, 0.09, 90), 50);
+      }
+      item() {
+        this.tone(784, 'triangle', 0.08, 0.08, 1046);
+        setTimeout(() => this.tone(1046, 'triangle', 0.1, 0.08, 1318), 70);
+      }
+      hurt() { this.tone(200, 'sawtooth', 0.28, 0.11, 55); }
+      takeoff() { this.tone(140, 'sawtooth', 0.55, 0.08, 520); }
+      stageClear() {
+        [523, 659, 784, 1046].forEach((f, i) => setTimeout(() => this.tone(f, 'triangle', 0.14, 0.09), i * 95));
+      }
+      unlock() {
+        [523, 659, 784, 1046].forEach((f, i) => setTimeout(() => this.tone(f, 'square', 0.1, 0.09), i * 75));
+      }
+      ultimateReady() {
+        [587, 740, 880, 1175, 1480].forEach((f, i) => setTimeout(() => this.tone(f, 'triangle', 0.14, 0.1), i * 65));
+      }
+      bossEscape() {
+        [440, 392, 349, 293].forEach((f, i) => setTimeout(() => this.tone(f, 'sawtooth', 0.18, 0.09), i * 110));
+      }
+    }
+
+    const sfx = new SoundEngine();
+
+    // ============================================================================
+    // 全八大幕漢字敵機資料庫（一～八幕共 78 種，全部為本作原創配字）
+    // ============================================================================
+    const ENEMY_DB = {
+      // === 第一幕：都城（19 種）===
+      '兵': { stage: 1, capturable: true,  posType: 'topbottom', posLabel: '在我機上下',     fireType: 'horiz',      fireLabel: '水平直線射擊',                        hp: 2,  size: 24, color: '#f87171', score: 120, ai: 'straight' },
+      '卒': { stage: 1, capturable: true,  posType: 'orbit',     posLabel: '在我機旁繞圈',   fireType: 'horiz',      fireLabel: '水平直線射擊',                        hp: 1,  size: 22, color: '#94a3b8', score: 100, ai: 'sine' },
+      '盾': { stage: 1, capturable: true,  posType: 'front',     posLabel: '在我機前方',     fireType: 'horiz',      fireLabel: '水平直線射擊',                        hp: 8,  size: 28, color: '#cbd5e1', score: 250, ai: 'slow' },
+      '母': { stage: 1, capturable: true,  posType: 'reverse',   posLabel: '與我機反向',     fireType: 'fixed_pos',  fireLabel: '射擊方向固定・與捕獲機方位同向',       hp: 5,  size: 30, color: '#fb923c', score: 260, ai: 'parent' },
+      '仔': { stage: 1, capturable: true,  posType: 'free',      posLabel: '自由控制',       fireType: 'horiz',      fireLabel: '水平直線射擊',                        hp: 1,  size: 18, color: '#fde047', score: 100, ai: 'fast' },
+      '護': { stage: 1, capturable: true,  posType: 'stick',     posLabel: '貼著我機',       fireType: 'none',       fireLabel: '無（貼身護盾消彈／強力自爆）',         hp: 3,  size: 24, color: '#a78bfa', score: 180, ai: 'sine' },
+      '謀': { stage: 1, capturable: true,  posType: 'free',      posLabel: '自由控制',       fireType: 'rev_line',   fireLabel: '與我機移動反向直線射擊',              hp: 3,  size: 24, color: '#38bdf8', score: 190, ai: 'aim' },
+      '阱': { stage: 1, capturable: true,  posType: 'topbottom', posLabel: '在我機上下',     fireType: 'rev_radial', fireLabel: '反向直線＋放射狀彈幕',                hp: 4,  size: 26, color: '#f472b6', score: 240, ai: 'trap' },
+      '躍': { stage: 1, capturable: true,  posType: 'front',     posLabel: '在我機前方',     fireType: 'jump',       fireLabel: '射擊同時往前跳出攻擊再回原位',         hp: 3,  size: 24, color: '#4ade80', score: 200, ai: 'hop' },
+      '哨': { stage: 1, capturable: true,  posType: 'front',     posLabel: '在我機前方',     fireType: 'horiz',      fireLabel: '水平直線射擊（可抵擋敵彈）',           hp: 7,  size: 28, color: '#60a5fa', score: 240, ai: 'slow' },
+      '突': { stage: 1, capturable: true,  posType: 'free',      posLabel: '自由控制',       fireType: 'rev_double', fireLabel: '與我機移動反向雙開直線射擊',           hp: 4,  size: 26, color: '#ef4444', score: 240, ai: 'aim' },
+      '昌': { stage: 1, capturable: true,  posType: 'topbottom', posLabel: '在我機上下',     fireType: 'none',       fireLabel: '無（純炸彈用・特大範圍自爆）',         hp: 4,  size: 30, color: '#f59e0b', score: 200, ai: 'split_mid' },
+      '日': { stage: 1, capturable: true,  posType: 'freefar',   posLabel: '自由遠距控制',   fireType: 'parabola',   fireLabel: '與我機移動反向垂直拋物線射擊',         hp: 2,  size: 19, color: '#fcd34d', score: 130, ai: 'fast' },
+      '狂': { stage: 1, capturable: true,  posType: 'orbit',     posLabel: '在我機旁繞圈',   fireType: 'rage_horiz', fireLabel: '水平直線射擊・可四段調整副機大小(R)',  hp: 6,  size: 28, color: '#dc2626', score: 280, ai: 'chase' },
+      '斥': { stage: 1, capturable: true,  posType: 'front',     posLabel: '在我機前方',     fireType: 'rev_line',   fireLabel: '與我機移動反向直線射擊',              hp: 4,  size: 25, color: '#e2e8f0', score: 200, ai: 'straight' },
+      '猛': { stage: 1, capturable: true,  posType: 'front',     posLabel: '在我機前方',     fireType: 'double',     fireLabel: '雙開直線射擊',                        hp: 7,  size: 30, color: '#fb7185', score: 300, ai: 'aim' },
+      '獵': { stage: 1, capturable: true,  posType: 'front',     posLabel: '在我機前方',     fireType: 'rev_line',   fireLabel: '與我機移動反向直線射擊',              hp: 4,  size: 25, color: '#22d3ee', score: 220, ai: 'chase' },
+      '蛋': { stage: 1, capturable: false, posType: 'none',      posLabel: '不可捕獲',       fireType: 'none',       fireLabel: '破壞後會孵化出「仔」',                hp: 3,  size: 24, color: '#fef08a', score: 140, ai: 'egg' },
+      '晶': { stage: 1, capturable: false, posType: 'none',      posLabel: '不可捕獲',       fireType: 'none',       fireLabel: '擊破後分裂成「昌」→「日」',            hp: 9,  size: 42, color: '#f97316', score: 360, ai: 'split_big' },
+
+      // === 第二幕：樹海（17 種）===
+      '葉': { stage: 2, capturable: true,  posType: 'free',      posLabel: '自由控制',       fireType: 'horiz',      fireLabel: '水平直線射擊',                        hp: 2,  size: 23, color: '#f9a8d4', score: 150, ai: 'sine' },
+      '刺': { stage: 2, capturable: true,  posType: 'front',     posLabel: '在我機前方',     fireType: 'jump',       fireLabel: '射擊同時往前跳出再回原位',             hp: 2,  size: 20, color: '#a3e635', score: 150, ai: 'fast' },
+      '梟': { stage: 2, capturable: true,  posType: 'free',      posLabel: '自由控制',       fireType: 'rev_line',   fireLabel: '與我機移動反向直線射擊',              hp: 2,  size: 21, color: '#cbd5e1', score: 160, ai: 'chase' },
+      '菇': { stage: 2, capturable: true,  posType: 'front',     posLabel: '在我機前方',     fireType: 'spiral',     fireLabel: '螺旋射擊（範圍廣大）',                hp: 6,  size: 27, color: '#34d399', score: 260, ai: 'slow' },
+      '藤': { stage: 2, capturable: true,  posType: 'orbit',     posLabel: '在我機旁繞圈',   fireType: 'spiral',     fireLabel: '螺旋射擊',                            hp: 4,  size: 24, color: '#facc15', score: 230, ai: 'sine' },
+      '鼠': { stage: 2, capturable: true,  posType: 'free',      posLabel: '自由控制',       fireType: 'horiz',      fireLabel: '水平直線射擊',                        hp: 2,  size: 20, color: '#a8a29e', score: 130, ai: 'straight' },
+      '猿': { stage: 2, capturable: true,  posType: 'free',      posLabel: '自由控制',       fireType: 'bounce',     fireLabel: '直線射擊碰壁反彈（3次）',              hp: 4,  size: 26, color: '#e2e8f0', score: 260, ai: 'aim' },
+      '蛇': { stage: 2, capturable: true,  posType: 'topbottom', posLabel: '在我機上下',     fireType: 'rev_line',   fireLabel: '與我機移動反向直線射擊',              hp: 4,  size: 24, color: '#4ade80', score: 200, ai: 'chase' },
+      '蛙': { stage: 2, capturable: true,  posType: 'front',     posLabel: '在我機前方',     fireType: 'jump',       fireLabel: '射擊同時往前跳出再回原位',             hp: 3,  size: 24, color: '#86efac', score: 210, ai: 'hop' },
+      '蝠': { stage: 2, capturable: true,  posType: 'free',      posLabel: '自由控制',       fireType: 'horiz',      fireLabel: '水平直線射擊',                        hp: 3,  size: 25, color: '#d8b4fe', score: 180, ai: 'sine' },
+      '芽': { stage: 2, capturable: true,  posType: 'freefar',   posLabel: '自由遠距控制',   fireType: 'rev_line',   fireLabel: '反向直線射擊（戰場上會羽化成蜩）',      hp: 4,  size: 24, color: '#fde68a', score: 220, ai: 'cocoon' },
+      '花': { stage: 2, capturable: true,  posType: 'freefar',   posLabel: '自由遠距控制',   fireType: 'rev_line',   fireLabel: '與我機移動反向直線射擊',              hp: 5,  size: 26, color: '#bef264', score: 260, ai: 'fast' },
+      '狐': { stage: 2, capturable: true,  posType: 'orbit',     posLabel: '在我機旁繞圈',   fireType: 'horiz',      fireLabel: '高速水平直線射擊',                    hp: 3,  size: 23, color: '#fde047', score: 200, ai: 'fast' },
+      '雀': { stage: 2, capturable: true,  posType: 'topbottom', posLabel: '在我機上下',     fireType: 'parabola',   fireLabel: '澆水狀垂直拋物線攻擊',                hp: 4,  size: 25, color: '#65a30d', score: 230, ai: 'hop' },
+      '狼': { stage: 2, capturable: true,  posType: 'orbit',     posLabel: '在我機旁繞圈',   fireType: 'double_spiral', fireLabel: '圓周運動＋雙開螺旋射擊',           hp: 6,  size: 28, color: '#f97316', score: 310, ai: 'aim' },
+      '熊': { stage: 2, capturable: true,  posType: 'front',     posLabel: '在我機前方',     fireType: 'none',       fireLabel: '無（護盾抵擋／純炸彈特大自爆）',       hp: 5,  size: 28, color: '#22c55e', score: 240, ai: 'chase' },
+      '栗': { stage: 2, capturable: false, posType: 'none',      posLabel: '不可捕獲',       fireType: 'none',       fireLabel: '堅硬外殼・定期噴發扇形彈幕',           hp: 10, size: 34, color: '#94a3b8', score: 380, ai: 'clam' },
+
+      // === 第三幕：冥府（16 種，含七情護衛）===
+      '魂': { stage: 3, capturable: true,  posType: 'freefar',   posLabel: '自由遠距控制',   fireType: 'rev_line',   fireLabel: '與我機移動反向直線射擊',              hp: 3,  size: 24, color: '#c4b5fd', score: 220, ai: 'sine' },
+      '魄': { stage: 3, capturable: true,  posType: 'freefar',   posLabel: '自由遠距控制',   fireType: 'rev_line',   fireLabel: '與我機移動反向直線射擊',              hp: 3,  size: 24, color: '#a5f3fc', score: 220, ai: 'sine' },
+      '厄': { stage: 3, capturable: true,  posType: 'front',     posLabel: '在我機前方',     fireType: 'jump_rev',   fireLabel: '往前跳擊＋與我機移動反向射擊',         hp: 6,  size: 28, color: '#f43f5e', score: 320, ai: 'hop' },
+      '毒': { stage: 3, capturable: true,  posType: 'free',      posLabel: '自由控制',       fireType: 'fixed_pos',  fireLabel: '射擊方向固定・與捕獲機方位同向',       hp: 5,  size: 27, color: '#a855f7', score: 280, ai: 'slow' },
+      '骨': { stage: 3, capturable: true,  posType: 'free',      posLabel: '自由控制',       fireType: 'rev_line',   fireLabel: '與我機移動反向直線射擊（高威）',       hp: 5,  size: 26, color: '#fde047', score: 300, ai: 'aim' },
+      '咒': { stage: 3, capturable: true,  posType: 'stick',     posLabel: '貼著我機',       fireType: 'none',       fireLabel: '無（貼身護盾消彈／強力自爆）',         hp: 5,  size: 26, color: '#84cc16', score: 260, ai: 'chase' },
+      '骸': { stage: 3, capturable: true,  posType: 'topbottom', posLabel: '在我機上下',     fireType: 'rev_radial', fireLabel: '反向直線＋放射狀彈幕',                hp: 6,  size: 28, color: '#9ca3af', score: 300, ai: 'slow' },
+      '喜': { stage: 3, capturable: true,  posType: 'front',     posLabel: '在我機前方',     fireType: 'trident',    fireLabel: '判官護衛・雙開／三叉射擊',             hp: 7,  size: 26, color: '#f43f5e', score: 360, ai: 'sin_orbit' },
+      '怒': { stage: 3, capturable: true,  posType: 'front',     posLabel: '在我機前方',     fireType: 'trident',    fireLabel: '判官護衛・雙開／三叉射擊',             hp: 7,  size: 26, color: '#fb923c', score: 360, ai: 'sin_orbit' },
+      '欲': { stage: 3, capturable: true,  posType: 'front',     posLabel: '在我機前方',     fireType: 'trident',    fireLabel: '判官護衛・雙開／三叉射擊',             hp: 7,  size: 26, color: '#facc15', score: 360, ai: 'sin_orbit' },
+      '哀': { stage: 3, capturable: true,  posType: 'front',     posLabel: '在我機前方',     fireType: 'trident',    fireLabel: '判官護衛・雙開／三叉射擊',             hp: 7,  size: 26, color: '#4ade80', score: 360, ai: 'sin_orbit' },
+      '愛': { stage: 3, capturable: true,  posType: 'front',     posLabel: '在我機前方',     fireType: 'trident',    fireLabel: '判官護衛・雙開／三叉射擊',             hp: 7,  size: 26, color: '#38bdf8', score: 360, ai: 'sin_orbit' },
+      '懼': { stage: 3, capturable: true,  posType: 'front',     posLabel: '在我機前方',     fireType: 'trident',    fireLabel: '判官護衛・雙開／三叉射擊',             hp: 7,  size: 26, color: '#818cf8', score: 360, ai: 'sin_orbit' },
+      '惡': { stage: 3, capturable: true,  posType: 'front',     posLabel: '在我機前方',     fireType: 'trident',    fireLabel: '判官護衛・雙開／三叉射擊',             hp: 7,  size: 26, color: '#e879f9', score: 360, ai: 'sin_orbit' },
+      '影': { stage: 3, capturable: false, posType: 'none',      posLabel: '不可捕獲',       fireType: 'none',       fireLabel: '會閃爍瞬移的冥府幻影敵機',            hp: 5,  size: 28, color: '#e879f9', score: 360, ai: 'phantom' },
+      '鬼': { stage: 3, capturable: false, posType: 'none',      posLabel: '不可捕獲',       fireType: 'none',       fireLabel: '冥府高階惡魔・發射交叉彈幕',          hp: 12, size: 34, color: '#dc2626', score: 500, ai: 'demon' },
+
+      // === 第四幕：深海 ===
+      '魚': { stage: 4, capturable: true,  posType: 'free',      posLabel: '自由控制',       fireType: 'horiz',      fireLabel: '水平直線射擊（深海魚群）',            hp: 3,  size: 24, color: '#38bdf8', score: 220, ai: 'sine' },
+      '蟹': { stage: 4, capturable: true,  posType: 'topbottom', posLabel: '在我機上下',     fireType: 'double',     fireLabel: '雙開直線射擊（堅硬甲殼）',            hp: 7,  size: 28, color: '#fb7185', score: 340, ai: 'slow' },
+      '蛸': { stage: 4, capturable: true,  posType: 'orbit',     posLabel: '在我機旁繞圈',   fireType: 'rev_radial', fireLabel: '反向直線＋放射墨汁彈幕',              hp: 6,  size: 29, color: '#f472b6', score: 360, ai: 'trap' },
+      '鯊': { stage: 4, capturable: true,  posType: 'front',     posLabel: '在我機前方',     fireType: 'jump',       fireLabel: '射擊同時往前高速咬擊再回位',          hp: 6,  size: 30, color: '#94a3b8', score: 380, ai: 'chase' },
+      '泡': { stage: 4, capturable: true,  posType: 'stick',     posLabel: '貼著我機',       fireType: 'none',       fireLabel: '無（貼身水泡護盾消彈／自爆）',        hp: 4,  size: 25, color: '#7dd3fc', score: 240, ai: 'sine' },
+      '渦': { stage: 4, capturable: false, posType: 'none',      posLabel: '不可捕獲',       fireType: 'none',       fireLabel: '深海漩渦・發射環狀水彈',              hp: 13, size: 36, color: '#0284c7', score: 520, ai: 'clam' },
+
+      // === 第五幕：天空 ===
+      '鳥': { stage: 5, capturable: true,  posType: 'free',      posLabel: '自由控制',       fireType: 'horiz',      fireLabel: '高速水平直線射擊',                   hp: 3,  size: 24, color: '#fde047', score: 250, ai: 'fast' },
+      '鷹': { stage: 5, capturable: true,  posType: 'front',     posLabel: '在我機前方',     fireType: 'jump_rev',   fireLabel: '俯衝跳擊＋反向直線射擊',              hp: 6,  size: 28, color: '#fb923c', score: 380, ai: 'chase' },
+      '雲': { stage: 5, capturable: true,  posType: 'topbottom', posLabel: '在我機上下',     fireType: 'parabola',   fireLabel: '雲雨垂直拋物線攻擊',                 hp: 6,  size: 30, color: '#e2e8f0', score: 320, ai: 'slow' },
+      '雷': { stage: 5, capturable: true,  posType: 'orbit',     posLabel: '在我機旁繞圈',   fireType: 'bounce',     fireLabel: '雷電碰壁反彈射擊（3次）',             hp: 7,  size: 28, color: '#facc15', score: 420, ai: 'aim' },
+      '嵐': { stage: 5, capturable: false, posType: 'none',      posLabel: '不可捕獲',       fireType: 'none',       fireLabel: '天空暴風・發射交叉颶風彈幕',          hp: 14, size: 36, color: '#38bdf8', score: 560, ai: 'demon' },
+
+      // === 第六幕：熔岩 ===
+      '火': { stage: 6, capturable: true,  posType: 'orbit',     posLabel: '在我機旁繞圈',   fireType: 'spiral',     fireLabel: '火焰螺旋射擊',                       hp: 4,  size: 25, color: '#f97316', score: 280, ai: 'sine' },
+      '炎': { stage: 6, capturable: true,  posType: 'front',     posLabel: '在我機前方',     fireType: 'trident',    fireLabel: '烈焰三叉射擊',                       hp: 7,  size: 29, color: '#ef4444', score: 400, ai: 'aim' },
+      '岩': { stage: 6, capturable: true,  posType: 'front',     posLabel: '在我機前方',     fireType: 'none',       fireLabel: '無（超硬岩石盾牌／特大自爆）',        hp: 12, size: 32, color: '#a8a29e', score: 420, ai: 'slow' },
+      '爆': { stage: 6, capturable: true,  posType: 'topbottom', posLabel: '在我機上下',     fireType: 'rev_double', fireLabel: '反向雙開爆裂彈射擊',                 hp: 5,  size: 28, color: '#facc15', score: 380, ai: 'hop' },
+      '熔': { stage: 6, capturable: false, posType: 'none',      posLabel: '不可捕獲',       fireType: 'none',       fireLabel: '火山熔核・週期噴發扇形火球',          hp: 16, size: 38, color: '#dc2626', score: 620, ai: 'clam' },
+
+      // === 第七幕：星海 ===
+      '星': { stage: 7, capturable: true,  posType: 'orbit',     posLabel: '在我機旁繞圈',   fireType: 'double_spiral', fireLabel: '星辰雙開螺旋射擊',                hp: 5,  size: 26, color: '#fde047', score: 360, ai: 'sine' },
+      '彗': { stage: 7, capturable: true,  posType: 'free',      posLabel: '自由控制',       fireType: 'rev_line',   fireLabel: '高速反向彗星直線射擊',                hp: 4,  size: 25, color: '#38bdf8', score: 340, ai: 'fast' },
+      '隕': { stage: 7, capturable: true,  posType: 'front',     posLabel: '在我機前方',     fireType: 'jump',       fireLabel: '隕石前衝撞擊再回位',                 hp: 9,  size: 30, color: '#cbd5e1', score: 400, ai: 'straight' },
+      '銀': { stage: 7, capturable: true,  posType: 'freefar',   posLabel: '自由遠距控制',   fireType: 'bounce',     fireLabel: '銀光碰壁反彈射擊（3次）',             hp: 6,  size: 27, color: '#e2e8f0', score: 420, ai: 'aim' },
+      '黑': { stage: 7, capturable: false, posType: 'none',      posLabel: '不可捕獲',       fireType: 'none',       fireLabel: '黑洞奇點・瞬移並發射交叉彈幕',        hp: 15, size: 36, color: '#a855f7', score: 680, ai: 'phantom' },
+
+      // === 第八幕：最終幕「根源」 ===
+      '光': { stage: 8, capturable: true,  posType: 'front',     posLabel: '在我機前方',     fireType: 'trident',    fireLabel: '聖光三叉射擊',                       hp: 7,  size: 27, color: '#fef08a', score: 480, ai: 'aim' },
+      '闇': { stage: 8, capturable: true,  posType: 'orbit',     posLabel: '在我機旁繞圈',   fireType: 'double_spiral', fireLabel: '深闇雙開螺旋射擊',                hp: 8,  size: 28, color: '#c084fc', score: 500, ai: 'chase' },
+      '虛': { stage: 8, capturable: true,  posType: 'freefar',   posLabel: '自由遠距控制',   fireType: 'rev_radial', fireLabel: '虛空反向＋放射彈幕',                 hp: 7,  size: 28, color: '#94a3b8', score: 480, ai: 'sine' },
+      '無': { stage: 8, capturable: true,  posType: 'stick',     posLabel: '貼著我機',       fireType: 'none',       fireLabel: '無（絕對虛無護盾／極大威力自爆）',    hp: 9,  size: 30, color: '#f8fafc', score: 520, ai: 'slow' },
+      '終': { stage: 8, capturable: false, posType: 'none',      posLabel: '不可捕獲',       fireType: 'none',       fireLabel: '終焉守護者・密集交叉彈幕',            hp: 18, size: 38, color: '#f43f5e', score: 800, ai: 'demon' }
+    };
+
+    const SHIPS = {
+      geki:   { char: '勇', color: '#38bdf8', speed: 5.6, fireRate: 7,  name: '平衡型' },
+      ha:     { char: '剛', color: '#fb923c', speed: 4.6, fireRate: 9,  name: '高火力型' },
+      den:    { char: '疾', color: '#34d399', speed: 6.9, fireRate: 7,  name: '高速機敏' },
+      kiwami: { char: '曜', color: '#fde047', speed: 6.7, fireRate: 6,  name: '隱藏機' }
+    };
+
+    const STAGE_NAMES = {
+      1: '第一幕・都城',
+      2: '第二幕・樹海',
+      3: '第三幕・冥府',
+      4: '第四幕・深海',
+      5: '第五幕・天空',
+      6: '第六幕・熔岩',
+      7: '第七幕・星海',
+      8: '最終幕・根源'
+    };
+
+    const DIFFICULTIES = {
+      easy:   { name: '簡單', bulletSpd: 0.78, fireCdMult: 1.35, hpMult: 0.8,  lockRadius: 68, invulnMult: 1.35, lives: 4 },
+      normal: { name: '普通', bulletSpd: 1.0,  fireCdMult: 1.0,  hpMult: 1.0,  lockRadius: 54, invulnMult: 1.0,  lives: 3 },
+      hard:   { name: '困難', bulletSpd: 1.24, fireCdMult: 0.72, hpMult: 1.3,  lockRadius: 44, invulnMult: 0.85, lives: 2 }
+    };
+
+    // ============================================================================
+    // 遊戲狀態管理
+    // ============================================================================
+    let savedHigh = 0;
+    let savedDex = [];
+    try {
+      savedHigh = Number(localStorage.getItem('zizhan_high') || 0);
+      savedDex = JSON.parse(localStorage.getItem('zizhan_dex') || '[]');
+    } catch (e) {}
+
+    const game = {
+      mode: 'title', // title | intro | playing | paused | victory | gameover
+      prevModeBeforeDex: 'title',
+      selectedShip: 'geki',
+      difficulty: 'normal',
+      startStage: 1,
+      unlockedKiwami: false,
+      autoFire: true,
+      loopCount: 1,
+      trueEnding: false,
+
+      stage: 1,
+      stageTimer: 0,
+      stageBannerTimer: 0,
+      stageClearDelay: 0,
+      bossWarningTimer: 0,
+      famicomBannerTimer: 0,
+      shake: 0,
+
+      score: 0,
+      highScore: savedHigh,
+      lives: 3,
+
+      // 道具強化等級
+      speedLv: 1,
+      doubleLv: 1,
+      sharpLv: 0,
+      medalMult: 1,
+      ultimateTimer: 0,
+
+      // 捕獲系統
+      captureGauge: 100,
+      option: null,
+      capturedSet: new Set(savedDex),
+
+      // 玩家狀態
+      player: { x: 140, y: H / 2, vx: 0, vy: 0, moveDirX: 1, moveDirY: 0, invuln: 0, fireCd: 0 },
+
+      // 「狙」追蹤雷射鎖定狀態
+      lockOn: { active: false, x: 140, y: H / 2, targets: [] },
+
+      // 輸入狀態
+      keys: {},
+      mouse: { x: 140, y: H / 2, active: false, left: false, right: false },
+
+      // 實體清單
+      pBullets: [],
+      eBullets: [],
+      captureBeams: [],
+      lasers: [],
+      enemies: [],
+      items: [],
+      particles: [],
+      floatingTexts: [],
+      boss: null,
+
+      // 視差背景
+      bgLayers: { far: [], mid: [], near: [] },
+
+      // 立體斜視起飛跑道動畫狀態
+      intro: { timer: 0, duration: 245, particles: [] }
+    };
+
+    // ============================================================================
+    // UI 覆蓋層、HUD 與圖鑑渲染
+    // ============================================================================
+    const overlays = {
+      title: document.getElementById('overlay-title'),
+      dex: document.getElementById('overlay-dex'),
+      pause: document.getElementById('overlay-pause'),
+      gameover: document.getElementById('overlay-gameover'),
+      victory: document.getElementById('overlay-victory')
+    };
+
+    function showOverlay(name) {
+      Object.values(overlays).forEach(el => el.classList.add('hidden-el'));
+      if (name && overlays[name]) overlays[name].classList.remove('hidden-el');
+    }
+
+    function addScore(pts) {
+      game.score += Math.floor(pts);
+      if (game.score > game.highScore) {
+        game.highScore = game.score;
+        try { localStorage.setItem('zizhan_high', String(game.highScore)); } catch (e) {}
+      }
+    }
+
+    function updateHUD() {
+      document.getElementById('hud-stage').textContent = STAGE_NAMES[game.stage] || '第一幕・都城';
+      document.getElementById('hud-diff').textContent = DIFFICULTIES[game.difficulty].name;
+      document.getElementById('hud-score').textContent = game.score.toLocaleString();
+      document.getElementById('hud-highscore').textContent = game.highScore.toLocaleString();
+
+      const shipChar = SHIPS[game.selectedShip].char;
+      document.getElementById('hud-lives').textContent = shipChar.repeat(Math.max(0, game.lives)) || '無';
+
+      const capEl = document.getElementById('hud-capture');
+      if (game.option) {
+        capEl.textContent = `副機「${game.option.char}」(按B自爆)`;
+        capEl.className = 'text-amber-300 font-bold';
+      } else if (game.captureGauge >= 100) {
+        capEl.textContent = '捕獲 可';
+        capEl.className = 'text-emerald-300 font-bold';
+      } else {
+        capEl.textContent = `充能 ${Math.floor(game.captureGauge)}%`;
+        capEl.className = 'text-rose-400 font-bold';
+      }
+
+      document.getElementById('hud-power').textContent =
+        `速${game.speedLv} 雙${game.doubleLv} 銳${game.sharpLv} 勳x${game.medalMult}`;
+    }
+
+    let currentDexTab = 1;
+    function renderDex(stageTab = currentDexTab) {
+      currentDexTab = stageTab;
+      const grid = document.getElementById('dex-grid');
+      const allCapturable = Object.entries(ENEMY_DB).filter(([, v]) => v.capturable);
+      const capturedCount = allCapturable.filter(([k]) => game.capturedSet.has(k)).length;
+      document.getElementById('dex-progress').textContent = `已捕獲 ${capturedCount} / ${allCapturable.length}`;
+
+      document.querySelectorAll('.dex-tab').forEach(btn => {
+        btn.classList.toggle('selected', Number(btn.dataset.dextab) === stageTab);
+      });
+
+      const list = Object.entries(ENEMY_DB).filter(([, v]) => v.stage === stageTab);
+      grid.innerHTML = list.map(([ch, info]) => {
+        const isCap = game.capturedSet.has(ch);
+        const badge = !info.capturable
+          ? '<span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-400">不可捕獲</span>'
+          : (isCap
+            ? '<span class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-800/80 text-emerald-200">✓ 已捕獲</span>'
+            : '<span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-amber-300">未捕獲</span>');
+        return `
+          <div class="dex-card ${isCap ? 'captured' : ''} p-2 flex items-center gap-2.5">
+            <div class="w-10 h-10 rounded-lg bg-slate-950 border border-slate-700 flex items-center justify-center text-2xl font-black shrink-0" style="color:${info.color}">
+              ${ch}
+            </div>
+            <div class="min-w-0 flex-1">
+              <div class="flex items-center justify-between gap-1">
+                <span class="text-xs font-bold text-white">${info.posLabel}</span>
+                ${badge}
+              </div>
+              <div class="text-[11px] text-slate-300 truncate" title="${info.fireLabel}">${info.fireLabel}</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function openDex() {
+      if (!overlays.dex.classList.contains('hidden-el')) {
+        closeDex();
+        return;
+      }
+      game.prevModeBeforeDex = game.mode;
+      if (game.mode === 'playing') game.mode = 'paused';
+      renderDex(game.stage || 1);
+      showOverlay('dex');
+      sfx.blip();
+    }
+
+    function closeDex() {
+      if (game.prevModeBeforeDex === 'playing') {
+        game.mode = 'playing';
+        showOverlay(null);
+      } else {
+        game.mode = game.prevModeBeforeDex;
+        showOverlay(game.mode === 'title' ? 'title' : (game.mode === 'paused' ? 'pause' : null));
+      }
+      sfx.blip();
+    }
+
+    // ============================================================================
+    // 背景視差漢字層與粒子特效
+    // ============================================================================
+    function initBgLayers() {
+      const stagePools = {
+        1: { far: ['棟', '樓', '城', '塔'], mid: ['雲', '煙', '霧'], near: ['風', '氣'] },
+        2: { far: ['森', '林', '樹', '木'], mid: ['葉', '枝', '霧'], near: ['草', '風'] },
+        3: { far: ['冥', '闇', '墓', '獄'], mid: ['魂', '鬼', '煙'], near: ['怨', '炎'] },
+        4: { far: ['海', '淵', '礁', '潮'], mid: ['波', '流', '泡'], near: ['水', '沫'] },
+        5: { far: ['天', '空', '峰', '霄'], mid: ['雲', '霞', '嵐'], near: ['風', '電'] },
+        6: { far: ['火', '山', '熔', '獄'], mid: ['炎', '灰', '煙'], near: ['燼', '熱'] },
+        7: { far: ['星', '銀', '河', '宙'], mid: ['光', '塵', '軌'], near: ['閃', '流'] },
+        8: { far: ['源', '無', '虛', '理'], mid: ['字', '文', '象'], near: ['極', '光'] }
+      };
+      const pools = stagePools[game.stage] || stagePools[1];
+      const groundStage = [1, 2, 4, 6].includes(game.stage);
+
+      game.bgLayers.far = Array.from({ length: 16 }, () => ({
+        char: pools.far[Math.floor(Math.random() * pools.far.length)],
+        x: Math.random() * W,
+        y: groundStage ? H - 38 - Math.random() * 65 : Math.random() * H,
+        speed: 0.45 + Math.random() * 0.4,
+        size: 38 + Math.random() * 24,
+        alpha: 0.16 + Math.random() * 0.1
+      }));
+
+      game.bgLayers.mid = Array.from({ length: 18 }, () => ({
+        char: pools.mid[Math.floor(Math.random() * pools.mid.length)],
+        x: Math.random() * W,
+        y: Math.random() * H,
+        speed: 1.2 + Math.random() * 1.0,
+        size: 20 + Math.random() * 22,
+        alpha: 0.12 + Math.random() * 0.1
+      }));
+
+      game.bgLayers.near = Array.from({ length: 12 }, () => ({
+        char: pools.near[Math.floor(Math.random() * pools.near.length)],
+        x: Math.random() * W,
+        y: Math.random() * H,
+        speed: 3.2 + Math.random() * 2.0,
+        size: 16 + Math.random() * 10,
+        alpha: 0.16 + Math.random() * 0.12
+      }));
+    }
+
+    function updateBgLayers(mult = 1) {
+      const groundStage = [1, 2, 4, 6].includes(game.stage);
+      ['far', 'mid', 'near'].forEach(layer => {
+        game.bgLayers[layer].forEach(c => {
+          c.x -= c.speed * mult;
+          if (c.x < -60) {
+            c.x = W + 50;
+            if (layer !== 'far' || !groundStage) c.y = Math.random() * H;
+          }
+        });
+      });
+    }
+
+    function drawBgLayers() {
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      const palettes = {
+        1: { far: '#334155', mid: '#64748b', near: '#94a3b8' },
+        2: { far: '#14532d', mid: '#15803d', near: '#4ade80' },
+        3: { far: '#4c1d95', mid: '#7e22ce', near: '#c084fc' },
+        4: { far: '#0c4a6e', mid: '#0284c7', near: '#38bdf8' },
+        5: { far: '#1e3a8a', mid: '#60a5fa', near: '#fef08a' },
+        6: { far: '#7f1d1d', mid: '#ea580c', near: '#facc15' },
+        7: { far: '#312e81', mid: '#6366f1', near: '#e0e7ff' },
+        8: { far: '#3f3f46', mid: '#a855f7', near: '#fde047' }
+      };
+      const colors = palettes[game.stage] || palettes[1];
+      ['far', 'mid', 'near'].forEach(layer => {
+        ctx.fillStyle = colors[layer];
+        game.bgLayers[layer].forEach(c => {
+          ctx.globalAlpha = c.alpha;
+          ctx.font = getFont(Math.round(c.size));
+          ctx.fillText(c.char, c.x, c.y);
+        });
+      });
+      ctx.globalAlpha = 1;
+    }
+
+    function spawnKanjiExplosion(x, y, count = 10, chars = ['爆', '炎', '碎'], colors = ['#fb923c', '#fde047', '#f43f5e'], maxSize = 26) {
+      for (let i = 0; i < count; i++) {
+        const ang = Math.random() * Math.PI * 2;
+        const spd = 1.2 + Math.random() * 4.5;
+        game.particles.push({
+          char: chars[Math.floor(Math.random() * chars.length)],
+          color: colors[Math.floor(Math.random() * colors.length)],
+          x, y,
+          vx: Math.cos(ang) * spd,
+          vy: Math.sin(ang) * spd,
+          size: 13 + Math.random() * (maxSize - 13),
+          life: 24 + Math.random() * 20,
+          maxLife: 44
+        });
+      }
+    }
+
+    function spawnFloatingText(x, y, text, color = '#fde047', size = 18, life = 55) {
+      game.floatingTexts.push({ x, y, text, color, size, life, maxLife: life });
+    }
+
+    // ============================================================================
+    // 立體斜視角度跑道起飛開場動畫（3D Oblique Perspective）
+    // ============================================================================
+    function startIntroSequence() {
+      game.mode = 'intro';
+      showOverlay(null);
+      game.intro.timer = 0;
+      game.intro.particles = [];
+      game.stageTimer = 0;
+      game.stageBannerTimer = 140;
+      game.stageClearDelay = 0;
+      game.bossWarningTimer = 0;
+      game.pBullets = [];
+      game.eBullets = [];
+      game.captureBeams = [];
+      game.lasers = [];
+      game.enemies = [];
+      game.items = [];
+      game.particles = [];
+      game.floatingTexts = [];
+      game.boss = null;
+      game.lockOn.active = false;
+      game.lockOn.targets = [];
+      game.player.x = 140;
+      game.player.y = H / 2;
+      game.player.invuln = 90;
+      initBgLayers();
+      updateHUD();
+    }
+
+    // 開場演出：從星港「港」出發，星門「門」充能倒數後躍遷出擊
+    function updateAndDrawIntro() {
+      const t = ++game.intro.timer;
+      const ship = SHIPS[game.selectedShip];
+      const warp = t > 150 ? Math.min(1, (t - 150) / 40) : 0;
+      const charge = Math.min(1, t / 150);
+
+      ctx.fillStyle = '#020617';
+      ctx.fillRect(0, 0, W, H);
+
+      // 星空：平時緩慢流動，躍遷時拉長成光帶
+      if (!game.intro.stars) {
+        game.intro.stars = Array.from({ length: 110 }, () => ({
+          x: Math.random() * W, y: Math.random() * H, z: 0.25 + Math.random() * 0.75
+        }));
+      }
+      game.intro.stars.forEach(st => {
+        st.x -= (0.5 + warp * 20) * st.z;
+        if (st.x < -60) { st.x = W + Math.random() * 40; st.y = Math.random() * H; }
+        ctx.fillStyle = `rgba(226, 232, 240, ${0.2 + st.z * 0.6})`;
+        ctx.fillRect(st.x, st.y, 1.6 + warp * 42 * st.z, 1.6);
+      });
+
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+
+      // 遠方星雲字
+      ctx.fillStyle = 'rgba(129, 140, 248, 0.16)';
+      ctx.font = getFont(46);
+      ctx.fillText('河', W * 0.84 - warp * 120, 92);
+      ctx.fillText('雲', W * 0.18 - warp * 120, H - 70);
+
+      // 星港「港」：我機停靠的太空站，導引燈「燈」閃爍
+      const portX = 64 - warp * 300;
+      for (let i = 0; i < 5; i++) {
+        ctx.fillStyle = i === 2 ? '#38bdf8' : '#334155';
+        ctx.font = getFont(i === 2 ? 36 : 28);
+        ctx.fillText(i === 2 ? '港' : '壁', portX, H / 2 - 124 + i * 62);
+      }
+      if (Math.floor(t / 12) % 2 === 0) {
+        ctx.fillStyle = '#facc15';
+        ctx.font = getFont(15);
+        ctx.fillText('燈', portX + 44, H / 2 - 62);
+        ctx.fillText('燈', portX + 44, H / 2 + 62);
+      }
+
+      // 星門：十四個「門」排成環，隨充能加速旋轉並發光
+      const gateX = W * 0.68, gateY = H / 2;
+      const ringR = 128 + warp * 46;
+      const vortex = ctx.createRadialGradient(gateX, gateY, 4, gateX, gateY, ringR);
+      vortex.addColorStop(0, `rgba(253, 224, 71, ${0.12 + charge * 0.5 + warp * 0.3})`);
+      vortex.addColorStop(1, 'rgba(99, 102, 241, 0)');
+      ctx.fillStyle = vortex;
+      ctx.beginPath();
+      ctx.ellipse(gateX, gateY, ringR * 0.48, ringR, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      const spin = t * (0.008 + charge * 0.05);
+      for (let i = 0; i < 14; i++) {
+        const a = spin + (i / 14) * Math.PI * 2;
+        const front = Math.cos(a) > 0;
+        ctx.save();
+        ctx.globalAlpha = front ? 1 : 0.42;
+        ctx.fillStyle = charge >= 1 ? '#fde047' : '#a5b4fc';
+        ctx.shadowColor = ctx.fillStyle;
+        ctx.shadowBlur = 6 + charge * 18;
+        ctx.font = getFont(front ? 26 : 19);
+        ctx.fillText('門', gateX + Math.cos(a) * ringR * 0.48, gateY + Math.sin(a) * ringR);
+        ctx.restore();
+      }
+
+      // 倒數「三・二・一」
+      if (t >= 60 && t < 150) {
+        const local = (t - 60) % 30;
+        if (local === 0) sfx.blip();
+        ctx.save();
+        ctx.globalAlpha = Math.max(0, 1 - local / 32);
+        ctx.fillStyle = '#f8fafc';
+        ctx.shadowColor = '#38bdf8';
+        ctx.shadowBlur = 20;
+        ctx.font = getFont(70 + local);
+        ctx.fillText(t < 90 ? '三' : (t < 120 ? '二' : '一'), W * 0.4, H / 2);
+        ctx.restore();
+      }
+
+      // 我機：充能時微微晃動 → 躍遷衝進星門（越遠越小）
+      let sx = 214, sy = H / 2 + Math.sin(t * 0.15) * 4, size = 46;
+      if (t < 150 && charge > 0.6) sx += (Math.random() - 0.5) * 2.4;
+      if (t >= 150) {
+        const p = Math.min(1, (t - 150) / 60);
+        sx = 214 + (gateX - 214) * Math.pow(p, 1.6);
+        sy = H / 2;
+        size = 46 * (1 - p * 0.78);
+      }
+      if (t === 150) sfx.takeoff();
+
+      // 尾焰：充能時噴「能」，躍遷時拖出「流」
+      if (t > 20 && t < 212 && t % 2 === 0) {
+        game.intro.particles.push({
+          char: t < 150 ? '能' : '流',
+          x: sx - size * 0.6,
+          y: sy + (Math.random() - 0.5) * 10,
+          vx: -2.4 - Math.random() * 2 - warp * 7,
+          vy: (Math.random() - 0.5) * 0.8,
+          size: Math.max(10, size * 0.45),
+          life: 24,
+          color: Math.random() < 0.6 ? ship.color : '#fde047'
+        });
+      }
+      for (let i = game.intro.particles.length - 1; i >= 0; i--) {
+        const pt = game.intro.particles[i];
+        pt.x += pt.vx;
+        pt.y += pt.vy;
+        pt.life--;
+        ctx.globalAlpha = Math.max(0, pt.life / 24);
+        ctx.fillStyle = pt.color;
+        ctx.font = getFont(Math.round(pt.size));
+        ctx.fillText(pt.char, pt.x, pt.y);
+        if (pt.life <= 0) game.intro.particles.splice(i, 1);
+      }
+      ctx.globalAlpha = 1;
+
+      if (t < 212) {
+        ctx.save();
+        ctx.fillStyle = ship.color;
+        ctx.shadowColor = ship.color;
+        ctx.shadowBlur = 16;
+        ctx.font = getFont(Math.max(12, Math.round(size)));
+        ctx.fillText(ship.char, sx, sy);
+        ctx.restore();
+      }
+
+      // 穿過星門的閃光
+      if (t > 200) {
+        ctx.fillStyle = `rgba(255, 255, 255, ${Math.max(0, 1 - Math.abs(t - 222) / 22)})`;
+        ctx.fillRect(0, 0, W, H);
+      }
+
+      // 字幕
+      ctx.fillStyle = '#e2e8f0';
+      ctx.font = getFont(22);
+      if (t < 60) ctx.fillText(`${STAGE_NAMES[game.stage]}・星門充能中…`, W / 2, 50);
+      else if (t < 150) ctx.fillText(`星門能量 ${Math.round(charge * 100)}%・準備躍遷`, W / 2, 50);
+      else if (t < 205) ctx.fillText('躍　遷　出　擊　！', W / 2, 50);
+
+      ctx.fillStyle = 'rgba(148, 163, 184, 0.75)';
+      ctx.font = getFont(13);
+      ctx.fillText('（點擊畫面或按任意鍵跳過開場）', W / 2, H - 22);
+
+      if (t >= game.intro.duration) {
+        game.mode = 'playing';
+      }
+    }
+
+    // ============================================================================
+    // 我機射擊、「狙」追蹤雷射、「捕」捕獲副機＆自爆系統
+    // ============================================================================
+    function firePlayerWeapon() {
+      const p = game.player;
+      const ship = SHIPS[game.selectedShip];
+      const baseDmg = game.selectedShip === 'ha' ? 2.1 : (game.selectedShip === 'kiwami' ? 1.8 : 1.15);
+      const sharp = game.sharpLv > 0;
+      const bChar = sharp ? '銳' : (game.selectedShip === 'ha' ? '焰' : '星');
+      const bCol = sharp ? '#fde047' : ship.color;
+
+      const addShot = (ox, oy, vx, vy, dmg = baseDmg, pierce = false) => {
+        game.pBullets.push({
+          x: p.x + ox, y: p.y + oy, vx, vy,
+          char: bChar, color: bCol, size: sharp ? 16 : 15,
+          dmg, sharp, pierce, bounces: 0, gravity: 0
+        });
+      };
+
+      if (game.doubleLv === 1) {
+        addShot(22, 0, 12.5, 0, baseDmg, game.selectedShip === 'ha');
+      } else if (game.doubleLv === 2) {
+        addShot(20, -10, 12.5, 0, baseDmg, game.selectedShip === 'ha');
+        addShot(20, 10, 12.5, 0, baseDmg, game.selectedShip === 'ha');
+      } else {
+        addShot(22, 0, 13, 0, baseDmg, game.selectedShip === 'ha');
+        addShot(18, -14, 12.2, -1.6, baseDmg * 0.9, false);
+        addShot(18, 14, 12.2, 1.6, baseDmg * 0.9, false);
+      }
+
+      if (game.selectedShip === 'kiwami') {
+        addShot(16, -20, 11.5, -3.1, 1.2, false);
+        addShot(16, 20, 11.5, 3.1, 1.2, false);
+      }
+
+      sfx.shoot();
+      fireOptionWeapon();
+    }
+
+    function startLockOn() {
+      if (game.mode !== 'playing') return;
+      if (!game.lockOn.active) {
+        game.lockOn.active = true;
+        game.lockOn.x = game.player.x + 80;
+        game.lockOn.y = game.player.y;
+        game.lockOn.targets = [];
+        sfx.blip();
+      }
+    }
+
+    function releaseLockOn() {
+      if (!game.lockOn.active) return;
+      game.lockOn.active = false;
+      const targets = game.lockOn.targets.filter(t => t && t.hp > 0);
+      game.lockOn.targets = [];
+
+      if (targets.length > 0) {
+        sfx.homingLaser();
+        // 設計重點：發射追蹤光炮後獲得約 1 秒無敵時間
+        const inv = Math.round(64 * DIFFICULTIES[game.difficulty].invulnMult);
+        game.player.invuln = Math.max(game.player.invuln, inv);
+        game.shake = 10;
+
+        targets.forEach((t, idx) => {
+          const ctrlX = (game.player.x + t.x) / 2 + (idx % 2 === 0 ? -40 : 40);
+          const ctrlY = (game.player.y + t.y) / 2 + (idx % 2 === 0 ? -95 : 95);
+          game.lasers.push({
+            sx: game.player.x + 16, sy: game.player.y,
+            cx: ctrlX, cy: ctrlY,
+            ex: t.x, ey: t.y,
+            life: 24, maxLife: 24,
+            color: idx % 2 === 0 ? '#38bdf8' : '#fde047'
+          });
+          if (t === game.boss) {
+            damageBossCore(10 + game.medalMult * 2, true);
+          } else {
+            damageEnemy(t, 12 + game.medalMult * 2, true);
+          }
+        });
+      }
+    }
+
+    function triggerCaptureOrDetonate() {
+      if (game.mode !== 'playing') return;
+      if (game.option) {
+        // 副機大自爆（附帶約 1 秒無敵時間與清彈）
+        const op = game.option;
+        const isMegaBomb = ['昌', '熊', '護', '咒', '岩', '無'].includes(op.char);
+        const radius = isMegaBomb ? 265 : 200;
+        const dmg = isMegaBomb ? 34 : 22;
+
+        sfx.bomb();
+        const inv = Math.round(68 * DIFFICULTIES[game.difficulty].invulnMult);
+        game.player.invuln = Math.max(game.player.invuln, inv);
+        game.shake = 20;
+        spawnKanjiExplosion(op.x, op.y, 28, ['爆', '炸', '破', '滅'], ['#fde047', '#fb923c', '#f43f5e', '#ffffff'], 42);
+        spawnFloatingText(op.x, op.y - 20, `「${op.char}」大自爆！`, '#fde047', 24, 55);
+
+        // 消除爆炸範圍內的敵彈
+        game.eBullets = game.eBullets.filter(b => Math.hypot(b.x - op.x, b.y - op.y) > radius);
+        // 傷害範圍內敵機
+        for (let i = game.enemies.length - 1; i >= 0; i--) {
+          const e = game.enemies[i];
+          if (e && Math.hypot(e.x - op.x, e.y - op.y) < radius + e.size) {
+            damageEnemy(e, dmg, false);
+          }
+        }
+        // 傷害頭目與其部位
+        if (game.boss) {
+          if (Math.hypot(game.boss.x - op.x, game.boss.y - op.y) < radius + game.boss.size) {
+            damageBossCore(dmg, false);
+          }
+          if (game.boss) {
+            game.boss.parts.forEach(pt => {
+              if (pt.hp > 0) {
+                const px = game.boss.x + pt.ox, py = game.boss.y + pt.oy;
+                if (Math.hypot(px - op.x, py - op.y) < radius + pt.size) {
+                  pt.hp -= dmg;
+                  if (pt.hp <= 0) spawnKanjiExplosion(px, py, 14, ['破', '爆']);
+                }
+              }
+            });
+          }
+        }
+
+        game.option = null;
+        game.captureGauge = 0; // 自爆後進入捕獲充能冷卻
+        updateHUD();
+      } else if (game.captureGauge >= 100) {
+        // 發射「捕」字捕獲光炮
+        game.captureGauge = 20;
+        sfx.captureShot();
+        game.captureBeams.push({
+          x: game.player.x + 24,
+          y: game.player.y,
+          vx: 11,
+          size: 32,
+          life: 65
+        });
+        updateHUD();
+      }
+    }
+
+    function captureEnemy(enemy) {
+      const info = ENEMY_DB[enemy.char];
+      if (!info || !info.capturable) return false;
+      game.option = {
+        char: enemy.char,
+        info,
+        x: enemy.x,
+        y: enemy.y,
+        color: info.color,
+        angle: 0,
+        spiralAngle: 0,
+        jumpState: 0,
+        jumpOffset: 0,
+        rageStage: 1, // 「狂」專用 1~4 段大小
+        fireCd: 0
+      };
+      game.capturedSet.add(enemy.char);
+      try { localStorage.setItem('zizhan_dex', JSON.stringify([...game.capturedSet])); } catch (e) {}
+      sfx.captured();
+      spawnFloatingText(enemy.x, enemy.y - 24, `捕獲「${enemy.char}」！`, '#34d399', 22, 60);
+      spawnKanjiExplosion(enemy.x, enemy.y, 10, ['捕', '獲'], ['#34d399', '#38bdf8'], 24);
+      updateHUD();
+      return true;
+    }
+
+    function fireOptionWeapon() {
+      const op = game.option;
+      if (!op || op.info.fireType === 'none') return;
+
+      const p = game.player;
+      const ft = op.info.fireType;
+      const rx = -p.moveDirX || -1;
+      const ry = -p.moveDirY || 0;
+      const shoot = (vx, vy, char = '副', extra = {}) => {
+        game.pBullets.push({
+          x: op.x, y: op.y, vx, vy,
+          char, color: op.color, size: extra.size || 14,
+          dmg: extra.dmg || 1.2, sharp: false, pierce: false,
+          bounces: extra.bounces || 0, gravity: extra.gravity || 0
+        });
+      };
+
+      if (ft === 'horiz') {
+        shoot(11, 0, op.char);
+      } else if (ft === 'rage_horiz') {
+        shoot(11.5, 0, '狂', { size: 12 + op.rageStage * 4, dmg: 1.0 + op.rageStage * 0.45 });
+      } else if (ft === 'double') {
+        shoot(11, -1.6, op.char);
+        shoot(11, 1.6, op.char);
+      } else if (ft === 'trident') {
+        shoot(11.5, 0, op.char);
+        shoot(10.8, -2.5, op.char);
+        shoot(10.8, 2.5, op.char);
+      } else if (ft === 'rev_line') {
+        const len = Math.hypot(rx, ry) || 1;
+        shoot((rx / len) * 11, (ry / len) * 11, op.char, { dmg: 1.5 });
+      } else if (ft === 'rev_double') {
+        const baseAng = Math.atan2(ry, rx);
+        shoot(Math.cos(baseAng - 0.18) * 11, Math.sin(baseAng - 0.18) * 11, op.char);
+        shoot(Math.cos(baseAng + 0.18) * 11, Math.sin(baseAng + 0.18) * 11, op.char);
+      } else if (ft === 'rev_radial') {
+        for (let i = 0; i < 6; i++) {
+          const ang = (Math.PI * 2 / 6) * i + op.angle;
+          shoot(Math.cos(ang) * 9.5, Math.sin(ang) * 9.5, '散', { dmg: 0.95 });
+        }
+      } else if (ft === 'fixed_pos') {
+        const ang = Math.atan2(op.y - p.y, op.x - p.x);
+        shoot(Math.cos(ang) * 11, Math.sin(ang) * 11, op.char, { dmg: 1.35 });
+      } else if (ft === 'jump' || ft === 'jump_rev') {
+        if (op.jumpState === 0) op.jumpState = 1;
+        if (ft === 'jump_rev') {
+          const len = Math.hypot(rx, ry) || 1;
+          shoot((rx / len) * 10.5, (ry / len) * 10.5, op.char);
+        }
+      } else if (ft === 'parabola') {
+        shoot(5.5, -8.5, op.char, { gravity: 0.34, dmg: 1.5 });
+      } else if (ft === 'bounce') {
+        const ang = Math.atan2(op.y - p.y, op.x - p.x);
+        shoot(Math.cos(ang) * 10, Math.sin(ang) * 10, '絲', { bounces: 3, dmg: 1.3 });
+      } else if (ft === 'spiral') {
+        op.spiralAngle += 0.55;
+        shoot(Math.cos(op.spiralAngle) * 9.5, Math.sin(op.spiralAngle) * 9.5, op.char, { dmg: 1.1 });
+      } else if (ft === 'double_spiral') {
+        op.spiralAngle += 0.48;
+        shoot(Math.cos(op.spiralAngle) * 9.5, Math.sin(op.spiralAngle) * 9.5, op.char);
+        shoot(Math.cos(op.spiralAngle + Math.PI) * 9.5, Math.sin(op.spiralAngle + Math.PI) * 9.5, op.char);
+      }
+    }
+
+    function updateOption() {
+      const op = game.option;
+      if (!op) {
+        if (game.captureGauge < 100) {
+          game.captureGauge = Math.min(100, game.captureGauge + 0.32);
+          if (Math.floor(game.captureGauge) % 10 === 0) updateHUD();
+        }
+        return;
+      }
+
+      const p = game.player;
+      op.angle += 0.08;
+
+      if (op.jumpState === 1) {
+        op.jumpOffset += 18;
+        if (op.jumpOffset >= 190) op.jumpState = 2;
+      } else if (op.jumpState === 2) {
+        op.jumpOffset -= 14;
+        if (op.jumpOffset <= 0) { op.jumpOffset = 0; op.jumpState = 0; }
+      }
+
+      let tx = p.x + 54, ty = p.y;
+      const pt = op.info.posType;
+      if (pt === 'front') { tx = p.x + 56 + op.jumpOffset; ty = p.y; }
+      else if (pt === 'topbottom') { tx = p.x + 12; ty = p.y + Math.sin(op.angle * 0.7) * 58; }
+      else if (pt === 'orbit') { tx = p.x + Math.cos(op.angle) * 62; ty = p.y + Math.sin(op.angle) * 62; }
+      else if (pt === 'stick') { tx = p.x + 22; ty = p.y; }
+      else if (pt === 'reverse') { tx = W - p.x; ty = H - p.y; }
+      else if (pt === 'free') { tx = p.x - p.moveDirX * 52 + 32; ty = p.y - p.moveDirY * 52; }
+      else if (pt === 'freefar') { tx = p.x - p.moveDirX * 115 + 75; ty = p.y - p.moveDirY * 95; }
+
+      op.x += (tx - op.x) * 0.22;
+      op.y += (ty - op.y) * 0.22;
+      op.x = Math.max(24, Math.min(W - 24, op.x));
+      op.y = Math.max(24, Math.min(H - 24, op.y));
+
+      // 護盾型副機或跳擊衝刺時可消彈並造成接觸傷害
+      const isShield = ['護', '咒', '哨', '熊', '泡', '岩', '無'].includes(op.char) || op.jumpState > 0;
+      if (isShield) {
+        for (let i = game.eBullets.length - 1; i >= 0; i--) {
+          const b = game.eBullets[i];
+          if (Math.hypot(b.x - op.x, b.y - op.y) < 28) {
+            game.eBullets.splice(i, 1);
+            spawnKanjiExplosion(b.x, b.y, 2, ['防'], ['#38bdf8'], 14);
+          }
+        }
+        for (let i = game.enemies.length - 1; i >= 0; i--) {
+          const e = game.enemies[i];
+          if (e && Math.hypot(e.x - op.x, e.y - op.y) < e.size * 0.6 + 22) {
+            damageEnemy(e, op.jumpState > 0 ? 1.5 : 0.45, false);
+          }
+        }
+      }
+    }
+
+    // ============================================================================
+    // 敵機生成、AI 與道具掉落
+    // ============================================================================
+    function spawnEnemy(char, x, y, extra = {}) {
+      const info = ENEMY_DB[char];
+      if (!info) return null;
+      const diff = DIFFICULTIES[game.difficulty];
+      const hpMult = (1 + (game.loopCount - 1) * 0.45) * diff.hpMult;
+      const e = {
+        char,
+        capturable: info.capturable,
+        x, y,
+        baseY: y,
+        vx: info.ai === 'fast' ? -3.8 : (info.ai === 'slow' ? -1.2 : -2.3),
+        vy: 0,
+        hp: Math.max(1, Math.ceil(info.hp * hpMult)),
+        maxHp: Math.max(1, Math.ceil(info.hp * hpMult)),
+        size: info.size,
+        color: info.color,
+        score: info.score,
+        ai: info.ai,
+        timer: 0,
+        fireCd: (55 + Math.random() * 50) * diff.fireCdMult,
+        hitFlash: 0,
+        ...extra
+      };
+      game.enemies.push(e);
+      return e;
+    }
+
+    function fireEnemyBullet(x, y, vx, vy, char = '刃', color = '#ff3b5c', size = 14) {
+      const spdMult = DIFFICULTIES[game.difficulty].bulletSpd;
+      game.eBullets.push({ x, y, vx: vx * spdMult, vy: vy * spdMult, char, color, size });
+    }
+
+    function fireAimedBullet(x, y, speed = 3.8, char = '刃', color = '#ff3b5c', size = 14) {
+      const ang = Math.atan2(game.player.y - y, game.player.x - x);
+      fireEnemyBullet(x, y, Math.cos(ang) * speed, Math.sin(ang) * speed, char, color, size);
+    }
+
+    function maybeDropItem(x, y) {
+      if (Math.random() > 0.24) return;
+      const r = Math.random();
+      let char = '雙', color = '#38bdf8';
+      if (r < 0.22) { char = '速'; color = '#34d399'; }
+      else if (r < 0.44) { char = '雙'; color = '#38bdf8'; }
+      else if (r < 0.64) { char = '銳'; color = '#fde047'; }
+      else if (r < 0.80) { char = '充'; color = '#f472b6'; }
+      else if (r < 0.94) { char = '勳'; color = '#fb923c'; }
+      else { char = '壽'; color = '#4ade80'; }
+      game.items.push({ char, x, y, vx: -1.6, color, size: 24 });
+    }
+
+    function damageEnemy(e, dmg, fromLaser = false) {
+      if (!e || e.hp <= 0) return;
+      e.hp -= dmg;
+      e.hitFlash = 4;
+      if (e.hp <= 0) {
+        sfx.boom();
+        addScore(e.score * (fromLaser ? game.medalMult : 1));
+        spawnKanjiExplosion(e.x, e.y, 10, ['爆', '碎', '炎'], [e.color, '#fde047', '#fb923c'], 26);
+
+        // 特殊分裂／孵化邏輯
+        if (e.ai === 'split_big') {
+          spawnEnemy('昌', e.x, e.y - 26, { vx: -2.2 });
+          spawnEnemy('昌', e.x, e.y + 26, { vx: -2.2 });
+        } else if (e.ai === 'split_mid') {
+          spawnEnemy('日', e.x, e.y - 18, { vx: -3.2 });
+          spawnEnemy('日', e.x, e.y + 18, { vx: -3.2 });
+        } else if (e.ai === 'egg') {
+          spawnEnemy('仔', e.x, e.y - 14);
+          spawnEnemy('仔', e.x, e.y + 14);
+        }
+
+        maybeDropItem(e.x, e.y);
+        game.lockOn.targets = game.lockOn.targets.filter(t => t !== e);
+        const idx = game.enemies.indexOf(e);
+        if (idx !== -1) game.enemies.splice(idx, 1);
+        updateHUD();
+      } else {
+        sfx.hit();
+      }
+    }
+
+    function updateEnemies() {
+      const cdMult = DIFFICULTIES[game.difficulty].fireCdMult;
+      for (let i = game.enemies.length - 1; i >= 0; i--) {
+        const e = game.enemies[i];
+        if (!e) continue;
+        e.timer++;
+        if (e.hitFlash > 0) e.hitFlash--;
+
+        // 移動模式
+        if (e.ai === 'sin_orbit' && game.boss) {
+          if (e.lungeTimer > 0) {
+            e.lungeTimer--;
+            e.orbitAngle += 0.035;
+            e.x = game.boss.x + Math.cos(e.orbitAngle) * 115;
+            e.y = game.boss.y + Math.sin(e.orbitAngle) * 115;
+          } else {
+            const ang = Math.atan2(game.player.y - e.y, game.player.x - e.x);
+            e.x += Math.cos(ang) * 3.1;
+            e.y += Math.sin(ang) * 3.1;
+          }
+        } else if (e.ai === 'sine') {
+          e.x += e.vx;
+          e.y = e.baseY + Math.sin(e.timer * 0.07) * 55;
+        } else if (e.ai === 'chase') {
+          e.x += e.vx * 0.9;
+          e.y += Math.sign(game.player.y - e.y) * 1.45;
+        } else if (e.ai === 'hop') {
+          e.x += e.vx;
+          e.y = e.baseY - Math.abs(Math.sin(e.timer * 0.1)) * 70;
+        } else if (e.ai === 'phantom') {
+          e.x += e.vx * 0.7;
+          if (e.timer % 85 === 0) {
+            e.y = 80 + Math.random() * (H - 160);
+            spawnKanjiExplosion(e.x, e.y, 4, ['影'], ['#e879f9'], 20);
+          }
+        } else if (e.ai === 'cocoon') {
+          e.x += e.vx * 0.6;
+          if (e.timer === 110) {
+            e.char = '花';
+            e.ai = 'fast';
+            e.vx = -3.8;
+            e.color = '#bef264';
+            spawnFloatingText(e.x, e.y - 18, '羽化「花」！', '#bef264', 15, 36);
+          }
+        } else {
+          e.x += e.vx;
+          e.y += e.vy;
+        }
+
+        // 射擊邏輯
+        e.fireCd--;
+        if (e.fireCd <= 0 && e.x > 80 && e.x < W - 20) {
+          e.fireCd = (72 + Math.random() * 45) * cdMult;
+          if (e.ai === 'trap') {
+            for (let k = 0; k < 6; k++) {
+              const a = (Math.PI * 2 / 6) * k;
+              fireEnemyBullet(e.x, e.y, Math.cos(a) * 3.2, Math.sin(a) * 3.2, '阱', '#f472b6');
+            }
+          } else if (e.ai === 'clam') {
+            for (let k = -2; k <= 2; k++) {
+              const a = Math.PI + k * 0.25;
+              fireEnemyBullet(e.x, e.y, Math.cos(a) * 3.4, Math.sin(a) * 3.4, '刃', e.color);
+            }
+          } else if (e.ai === 'demon') {
+            for (let k = 0; k < 4; k++) {
+              const a = Math.PI / 4 + (Math.PI / 2) * k + e.timer * 0.05;
+              fireEnemyBullet(e.x, e.y, Math.cos(a) * 3.7, Math.sin(a) * 3.7, '鬼', '#ef4444');
+            }
+          } else if (e.ai === 'parent' && game.enemies.length < 14) {
+            spawnEnemy('仔', e.x - 16, e.y);
+          } else if (e.ai !== 'egg' && e.ai !== 'slow') {
+            fireAimedBullet(e.x, e.y, 3.6, '刃', '#ff4d6d');
+          }
+        }
+
+        // 與我機碰撞判定
+        if (Math.hypot(e.x - game.player.x, e.y - game.player.y) < e.size * 0.52 + 12) {
+          if (game.ultimateTimer > 0) {
+            damageEnemy(e, 99, true);
+          } else {
+            hurtPlayer();
+          }
+          continue;
+        }
+
+        // 離場清除
+        if (e.x < -70 || e.y < -80 || e.y > H + 80) {
+          game.lockOn.targets = game.lockOn.targets.filter(t => t !== e);
+          game.enemies.splice(i, 1);
+        }
+      }
+    }
+
+    // ============================================================================
+    // 八大幕頭目系統（含最終幕魔王「源」與「究」道具最後一擊機制）
+    // ============================================================================
+    function spawnBoss() {
+      const diff = DIFFICULTIES[game.difficulty];
+      const mult = (1 + (game.loopCount - 1) * 0.5) * diff.hpMult;
+      if (game.stage === 1) {
+        game.boss = {
+          stage: 1, name: '機甲堡壘・壘', char: '壘',
+          x: W + 150, y: H / 2, targetX: W - 175, vy: 1.3,
+          hp: Math.ceil(115 * mult), maxHp: Math.ceil(115 * mult),
+          size: 82, color: '#cbd5e1', timer: 0, hitFlash: 0,
+          parts: [
+            { char: '弩', ox: -52, oy: -72, hp: Math.ceil(24 * mult), maxHp: Math.ceil(24 * mult), size: 30, color: '#f97316', cd: 45 },
+            { char: '弩', ox: -52, oy: 72,  hp: Math.ceil(24 * mult), maxHp: Math.ceil(24 * mult), size: 30, color: '#f97316', cd: 65 },
+            { char: '弩', ox: -88, oy: 0,   hp: Math.ceil(28 * mult), maxHp: Math.ceil(28 * mult), size: 32, color: '#fb923c', cd: 85 }
+          ]
+        };
+      } else if (game.stage === 2) {
+        game.boss = {
+          stage: 2, name: '森林古神・榕', char: '榕',
+          x: W + 150, y: H / 2, targetX: W - 175, vy: 1.6,
+          hp: Math.ceil(145 * mult), maxHp: Math.ceil(145 * mult),
+          size: 86, color: '#4ade80', timer: 0, hitFlash: 0,
+          parts: [
+            { char: '根', ox: -68, oy: -38, hp: Math.ceil(28 * mult), maxHp: Math.ceil(28 * mult), size: 32, color: '#fde047', cd: 55 },
+            { char: '根', ox: -68, oy: 38,  hp: Math.ceil(28 * mult), maxHp: Math.ceil(28 * mult), size: 32, color: '#fde047', cd: 75 }
+          ]
+        };
+      } else if (game.stage === 3) {
+        game.boss = {
+          stage: 3, name: '幽冥判官・判', char: '判',
+          x: W + 150, y: H / 2, targetX: W - 185, vy: 1.4,
+          hp: Math.ceil(180 * mult), maxHp: Math.ceil(180 * mult),
+          size: 88, color: '#c084fc', timer: 0, hitFlash: 0,
+          parts: []
+        };
+        const emotions = ['喜', '怒', '欲', '哀', '愛', '懼', '惡'];
+        emotions.forEach((ch, idx) => {
+          spawnEnemy(ch, W - 185, H / 2, {
+            orbitIdx: idx, orbitCount: emotions.length,
+            orbitAngle: (Math.PI * 2 / emotions.length) * idx,
+            lungeTimer: 160 + idx * 70
+          });
+        });
+      } else if (game.stage === 4) {
+        game.boss = {
+          stage: 4, name: '深淵巨鯨・鯨', char: '鯨',
+          x: W + 150, y: H / 2, targetX: W - 180, vy: 1.5,
+          hp: Math.ceil(205 * mult), maxHp: Math.ceil(205 * mult),
+          size: 88, color: '#38bdf8', timer: 0, hitFlash: 0,
+          parts: [
+            { char: '潮', ox: -62, oy: -66, hp: Math.ceil(36 * mult), maxHp: Math.ceil(36 * mult), size: 32, color: '#7dd3fc', cd: 50 },
+            { char: '潮', ox: -62, oy: 66,  hp: Math.ceil(36 * mult), maxHp: Math.ceil(36 * mult), size: 32, color: '#7dd3fc', cd: 70 }
+          ]
+        };
+      } else if (game.stage === 5) {
+        game.boss = {
+          stage: 5, name: '雷霆巨鳳・鳳', char: '鳳',
+          x: W + 150, y: H / 2, targetX: W - 180, vy: 2.1,
+          hp: Math.ceil(225 * mult), maxHp: Math.ceil(225 * mult),
+          size: 86, color: '#fde047', timer: 0, hitFlash: 0,
+          parts: [
+            { char: '翼', ox: -32, oy: -76, hp: Math.ceil(38 * mult), maxHp: Math.ceil(38 * mult), size: 34, color: '#fb923c', cd: 45 },
+            { char: '翼', ox: -32, oy: 76,  hp: Math.ceil(38 * mult), maxHp: Math.ceil(38 * mult), size: 34, color: '#fb923c', cd: 60 }
+          ]
+        };
+      } else if (game.stage === 6) {
+        game.boss = {
+          stage: 6, name: '煉獄炎龍・龍', char: '龍',
+          x: W + 150, y: H / 2, targetX: W - 185, vy: 1.8,
+          hp: Math.ceil(255 * mult), maxHp: Math.ceil(255 * mult),
+          size: 90, color: '#ef4444', timer: 0, hitFlash: 0,
+          parts: [
+            { char: '炎', ox: -66, oy: -54, hp: Math.ceil(42 * mult), maxHp: Math.ceil(42 * mult), size: 32, color: '#f97316', cd: 44 },
+            { char: '炎', ox: -66, oy: 54,  hp: Math.ceil(42 * mult), maxHp: Math.ceil(42 * mult), size: 32, color: '#f97316', cd: 62 },
+            { char: '核', ox: -92, oy: 0,   hp: Math.ceil(46 * mult), maxHp: Math.ceil(46 * mult), size: 30, color: '#fde047', cd: 80 }
+          ]
+        };
+      } else if (game.stage === 7) {
+        game.boss = {
+          stage: 7, name: '銀河要塞・城', char: '城',
+          x: W + 150, y: H / 2, targetX: W - 185, vy: 1.3,
+          hp: Math.ceil(290 * mult), maxHp: Math.ceil(290 * mult),
+          size: 92, color: '#818cf8', timer: 0, hitFlash: 0,
+          parts: [
+            { char: '衛', ox: -54, oy: -80, hp: Math.ceil(44 * mult), maxHp: Math.ceil(44 * mult), size: 32, color: '#38bdf8', cd: 42 },
+            { char: '衛', ox: -54, oy: 80,  hp: Math.ceil(44 * mult), maxHp: Math.ceil(44 * mult), size: 32, color: '#38bdf8', cd: 58 },
+            { char: '星', ox: -94, oy: 0,   hp: Math.ceil(50 * mult), maxHp: Math.ceil(50 * mult), size: 34, color: '#fde047', cd: 75 }
+          ]
+        };
+      } else {
+        // 第八幕最終魔王「源」：瀕死時需取得「究」給予最後一擊，否則會逃走！
+        game.boss = {
+          stage: 8, name: '最終魔王・源', char: '源',
+          x: W + 160, y: H / 2, targetX: W - 190, vy: 1.7,
+          hp: Math.ceil(340 * mult), maxHp: Math.ceil(340 * mult),
+          size: 96, color: '#ffffff', timer: 0, hitFlash: 0,
+          escapePhase: false, escapeTimer: 0, ultimateSpawned: false,
+          parts: [
+            { char: '理', ox: -68, oy: -72, hp: Math.ceil(46 * mult), maxHp: Math.ceil(46 * mult), size: 32, color: '#fde047', cd: 48 },
+            { char: '法', ox: -68, oy: 72,  hp: Math.ceil(46 * mult), maxHp: Math.ceil(46 * mult), size: 32, color: '#38bdf8', cd: 64 }
+          ]
+        };
+      }
+    }
+
+    function damageBossCore(dmg, fromLaser = false) {
+      const b = game.boss;
+      if (!b || b.hp <= 0) return;
+
+      // 最終魔王「源」專屬機制：血量低於 22% 進入逃脫階段，必須在「究」無敵狀態下才能給予最後一擊
+      if (b.stage === 8) {
+        const threshold = Math.max(10, Math.floor(b.maxHp * 0.22));
+        if (!b.escapePhase && b.hp - dmg <= threshold) {
+          b.escapePhase = true;
+          b.escapeTimer = 460;
+          b.hp = Math.max(1, threshold);
+          if (!b.ultimateSpawned) {
+            b.ultimateSpawned = true;
+            sfx.ultimateReady();
+            game.items.push({ char: '究', x: W * 0.56, y: H / 2, vx: -0.7, color: '#fde047', size: 32 });
+            spawnFloatingText(W / 2, H / 2 - 40, '「源」正準備逃走！快取得「究」給予最後一擊！', '#fde047', 22, 110);
+          }
+          return;
+        }
+        if (b.escapePhase && game.ultimateTimer <= 0) {
+          b.hp = Math.max(1, b.hp - dmg * 0.4);
+          b.hitFlash = 4;
+          sfx.hit();
+          return;
+        }
+      }
+
+      b.hp -= dmg;
+      b.hitFlash = 4;
+      if (b.hp <= 0) {
+        sfx.bigBoom();
+        sfx.stageClear();
+        game.shake = 26;
+        addScore(6000 * game.stage * (fromLaser ? game.medalMult : 1));
+        spawnKanjiExplosion(b.x, b.y, 48, ['爆', '破', '滅', '炎'], ['#fde047', '#fb923c', '#f43f5e', '#ffffff'], 46);
+        game.eBullets = [];
+        if (b.stage === 8) game.trueEnding = true;
+        game.lockOn.targets = game.lockOn.targets.filter(t => t !== b);
+        game.boss = null;
+        game.stageClearDelay = 120;
+        updateHUD();
+      } else {
+        sfx.hit();
+      }
+    }
+
+    function updateBoss() {
+      const b = game.boss;
+      if (!b) return;
+      b.timer++;
+      if (b.hitFlash > 0) b.hitFlash--;
+      if (b.x > b.targetX && !b.escapePhase) { b.x -= 2.2; return; }
+
+      const cdMult = DIFFICULTIES[game.difficulty].fireCdMult;
+
+      // 最終魔王「源」逃脫倒數
+      if (b.stage === 8 && b.escapePhase) {
+        b.escapeTimer--;
+        b.y += Math.sin(b.timer * 0.1) * 3.2;
+        if (b.escapeTimer < 120) b.x += 1.6;
+        if (b.escapeTimer <= 0) {
+          sfx.bossEscape();
+          game.trueEnding = false;
+          game.eBullets = [];
+          game.boss = null;
+          game.stageClearDelay = 95;
+          spawnFloatingText(W / 2, H / 2, '最終魔王「源」逃走了…', '#f43f5e', 28, 90);
+          return;
+        }
+      } else {
+        b.y += b.vy;
+        if (b.y < 110 || b.y > H - 110) b.vy *= -1;
+      }
+
+      b.parts.forEach(p => {
+        if (p.hp <= 0) return;
+        if (p.hitFlash > 0) p.hitFlash--;
+        p.cd--;
+        if (p.cd <= 0) {
+          p.cd = Math.round(68 * cdMult);
+          const px = b.x + p.ox, py = b.y + p.oy;
+          fireAimedBullet(px, py, 4.2, p.char, p.color, 15);
+        }
+      });
+
+      const rate = (base) => Math.max(20, Math.round(base * cdMult));
+      if (b.stage === 1 && b.timer % rate(55) === 0) {
+        for (let k = -2; k <= 2; k++) {
+          const ang = Math.PI + k * 0.22;
+          fireEnemyBullet(b.x - 30, b.y, Math.cos(ang) * 3.8, Math.sin(ang) * 3.8, '矢', '#f43f5e', 16);
+        }
+      } else if (b.stage === 2) {
+        if (b.timer % rate(110) === 0 && game.enemies.length < 6) {
+          spawnEnemy('熊', b.x - 40, b.y + (Math.random() - 0.5) * 80);
+        }
+        if (b.timer % rate(45) === 0) {
+          for (let i = 0; i < 8; i++) {
+            const ang = (Math.PI * 2 / 8) * i + b.timer * 0.06;
+            fireEnemyBullet(b.x, b.y, Math.cos(ang) * 3.5, Math.sin(ang) * 3.5, '針', '#a3e635', 15);
+          }
+        }
+      } else if (b.stage === 3) {
+        if (b.timer % rate(48) === 0) {
+          const rainbow = ['#ef4444', '#f97316', '#facc15', '#22c55e', '#38bdf8', '#818cf8', '#e879f9'];
+          rainbow.forEach((col, idx) => {
+            const ang = Math.PI - 0.72 + idx * 0.24 + Math.sin(b.timer * 0.05) * 0.15;
+            fireEnemyBullet(b.x - 24, b.y, Math.cos(ang) * 4.1, Math.sin(ang) * 4.1, idx % 2 === 0 ? '彩' : '虹', col, 16);
+          });
+        }
+      } else if (b.stage === 4 && b.timer % rate(50) === 0) {
+        for (let k = -3; k <= 3; k++) {
+          const ang = Math.PI + k * 0.18;
+          fireEnemyBullet(b.x - 30, b.y, Math.cos(ang) * 3.7, Math.sin(ang) * 3.7, '波', '#38bdf8', 16);
+        }
+      } else if (b.stage === 5 && b.timer % rate(42) === 0) {
+        for (let i = 0; i < 6; i++) {
+          const ang = Math.PI - 0.65 + i * 0.26;
+          fireEnemyBullet(b.x - 20, b.y, Math.cos(ang) * 4.6, Math.sin(ang) * 4.6, '雷', '#fde047', 16);
+        }
+      } else if (b.stage === 6 && b.timer % rate(46) === 0) {
+        for (let i = 0; i < 10; i++) {
+          const ang = (Math.PI * 2 / 10) * i + b.timer * 0.05;
+          fireEnemyBullet(b.x, b.y, Math.cos(ang) * 3.9, Math.sin(ang) * 3.9, '炎', '#fb923c', 16);
+        }
+      } else if (b.stage === 7 && b.timer % rate(40) === 0) {
+        for (let i = 0; i < 12; i++) {
+          const ang = (Math.PI * 2 / 12) * i - b.timer * 0.07;
+          fireEnemyBullet(b.x, b.y, Math.cos(ang) * 3.8, Math.sin(ang) * 3.8, i % 2 === 0 ? '星' : '光', '#818cf8', 15);
+        }
+      } else if (b.stage === 8 && b.timer % rate(38) === 0) {
+        const words = ['源', '光', '闇', '虛', '無', '極'];
+        for (let i = 0; i < 10; i++) {
+          const ang = (Math.PI * 2 / 10) * i + Math.sin(b.timer * 0.04) * 0.6;
+          fireEnemyBullet(b.x - 16, b.y, Math.cos(ang) * 4.0, Math.sin(ang) * 4.0, words[i % words.length], i % 2 === 0 ? '#fde047' : '#e879f9', 16);
+        }
+      }
+    }
+
+    // ============================================================================
+    // 八大幕波次腳本
+    // ============================================================================
+    const STAGE_WAVES = {
+      1: [
+        ['卒', '卒', '兵'],
+        ['兵', '盾', '蛋'],
+        ['母', '仔', '護'],
+        ['謀', '阱', '躍'],
+        ['哨', '突', '晶'],
+        ['狂', '斥', '猛'],
+        ['獵', '阱', '盾'],
+        ['晶', '母', '狂', '突']
+      ],
+      2: [
+        ['葉', '鼠', '刺'],
+        ['梟', '菇', '蝠'],
+        ['藤', '猿', '蛇'],
+        ['蛙', '芽', '狐'],
+        ['雀', '狼', '熊'],
+        ['栗', '猿', '菇'],
+        ['芽', '狼', '雀', '狐']
+      ],
+      3: [
+        ['魂', '魄', '咒'],
+        ['厄', '毒', '骨'],
+        ['骸', '影', '魂'],
+        ['鬼', '骨', '厄'],
+        ['毒', '骸', '咒'],
+        ['影', '鬼', '骸', '骨']
+      ],
+      4: [
+        ['魚', '魚', '泡'],
+        ['蟹', '魚', '鯊'],
+        ['蛸', '泡', '蟹'],
+        ['渦', '鯊', '魚'],
+        ['蛸', '鯊', '渦', '蟹']
+      ],
+      5: [
+        ['鳥', '鳥', '雲'],
+        ['鷹', '雷', '鳥'],
+        ['雲', '嵐', '鷹'],
+        ['雷', '鳥', '雲', '鷹'],
+        ['嵐', '雷', '鷹', '雲']
+      ],
+      6: [
+        ['火', '火', '岩'],
+        ['炎', '爆', '火'],
+        ['熔', '岩', '炎'],
+        ['爆', '火', '炎', '岩'],
+        ['熔', '爆', '炎', '火']
+      ],
+      7: [
+        ['星', '彗', '隕'],
+        ['銀', '星', '彗'],
+        ['黑', '隕', '銀'],
+        ['星', '彗', '銀', '隕'],
+        ['黑', '星', '銀', '彗']
+      ],
+      8: [
+        ['光', '闇', '無'],
+        ['虛', '光', '闇'],
+        ['終', '無', '虛'],
+        ['光', '闇', '虛', '終']
+      ]
+    };
+
+    function updateStageScript() {
+      if (game.stageBannerTimer > 0) game.stageBannerTimer--;
+      if (game.famicomBannerTimer > 0) game.famicomBannerTimer--;
+
+      if (game.stageClearDelay > 0) {
+        game.stageClearDelay--;
+        if (game.stageClearDelay === 0) {
+          if (game.stage < 8) {
+            game.stage++;
+            game.stageTimer = 0;
+            game.stageBannerTimer = 140;
+            initBgLayers();
+            updateHUD();
+          } else {
+            game.mode = 'victory';
+            const vTag = document.getElementById('victory-tag');
+            const vTitle = document.getElementById('victory-title');
+            const vDesc = document.getElementById('victory-desc');
+            if (game.trueEnding) {
+              vTag.textContent = 'TRUE ENDING — ALL 8 STAGES CLEARED';
+              vTitle.textContent = '完全擊破！';
+              vDesc.textContent = '你成功以「究」之力斬斷最終魔王「源」，為全漢字宇宙帶來永恆和平！';
+            } else {
+              vTag.textContent = 'NORMAL ENDING — 「源」逃脫';
+              vTitle.textContent = '作戰終了';
+              vDesc.textContent = '最終魔王「源」趁隙逃離了戰場…下次請務必取得「究」道具並給予最後一擊！';
+            }
+            document.getElementById('victory-score').textContent = game.score.toLocaleString();
+            document.getElementById('victory-highscore').textContent = game.highScore.toLocaleString();
+            showOverlay('victory');
+          }
+        }
+        return;
+      }
+
+      if (game.boss) return;
+
+      game.stageTimer++;
+      const waves = STAGE_WAVES[game.stage] || STAGE_WAVES[1];
+      const waveInterval = 115;
+
+      if (game.stageTimer % waveInterval === 40) {
+        const waveIdx = Math.floor(game.stageTimer / waveInterval);
+        if (waveIdx < waves.length) {
+          const group = waves[waveIdx];
+          group.forEach((ch, idx) => {
+            const y = (H / (group.length + 1)) * (idx + 1) + (Math.random() - 0.5) * 35;
+            spawnEnemy(ch, W + 40 + idx * 45, Math.max(55, Math.min(H - 55, y)));
+          });
+        }
+      }
+
+      const bossTrigger = waves.length * waveInterval + 80;
+      if (game.stageTimer === bossTrigger) {
+        game.bossWarningTimer = 120;
+        sfx.bossEscape();
+      }
+      if (game.bossWarningTimer > 0) {
+        game.bossWarningTimer--;
+        if (game.bossWarningTimer === 0) spawnBoss();
+      }
+    }
+
+    // ============================================================================
+    // 玩家受傷與道具拾取（取得道具附帶 2 秒無敵）
+    // ============================================================================
+    function hurtPlayer() {
+      if (game.player.invuln > 0 || game.ultimateTimer > 0) return;
+      game.lives--;
+      sfx.hurt();
+      game.shake = 16;
+      spawnKanjiExplosion(game.player.x, game.player.y, 18, ['痛', '墜', '爆'], ['#f43f5e', '#fde047', '#ffffff'], 32);
+      game.eBullets = [];
+      game.player.invuln = 125;
+      if (game.doubleLv > 1) game.doubleLv--;
+      updateHUD();
+
+      if (game.lives <= 0) {
+        game.mode = 'gameover';
+        document.getElementById('over-score').textContent = game.score.toLocaleString();
+        document.getElementById('over-stage').textContent = STAGE_NAMES[game.stage];
+        document.getElementById('over-highscore').textContent = game.highScore.toLocaleString();
+        showOverlay('gameover');
+      }
+    }
+
+    function applyItem(it) {
+      sfx.item();
+      // 設計重點：取得任何道具皆附帶約 2 秒無敵狀態
+      game.player.invuln = Math.max(game.player.invuln, 120);
+      addScore(300);
+
+      if (it.char === '速') {
+        game.speedLv = Math.min(5, game.speedLv + 1);
+        spawnFloatingText(it.x, it.y, '速度上升！', '#34d399', 18, 48);
+      } else if (it.char === '雙') {
+        game.doubleLv = Math.min(3, game.doubleLv + 1);
+        spawnFloatingText(it.x, it.y, '火力強化！', '#38bdf8', 18, 48);
+      } else if (it.char === '銳') {
+        game.sharpLv = Math.min(3, game.sharpLv + 1);
+        spawnFloatingText(it.x, it.y, '銳利散射！', '#fde047', 18, 48);
+      } else if (it.char === '充') {
+        game.captureGauge = 100;
+        spawnFloatingText(it.x, it.y, '捕獲立即就緒！', '#f472b6', 18, 48);
+      } else if (it.char === '勳') {
+        game.medalMult = Math.min(8, game.medalMult + 1);
+        spawnFloatingText(it.x, it.y, `雷射倍率 x${game.medalMult}！`, '#fb923c', 18, 48);
+      } else if (it.char === '壽') {
+        game.lives = Math.min(6, game.lives + 1);
+        spawnFloatingText(it.x, it.y, '1UP 生命＋1！', '#4ade80', 20, 55);
+      } else if (it.char === '究') {
+        game.ultimateTimer = 420;
+        sfx.ultimateReady();
+        spawnFloatingText(it.x, it.y, '「究」無敵覺醒！衝向「源」！', '#fde047', 22, 75);
+      }
+      updateHUD();
+    }
+
+    // ============================================================================
+    // 主遊戲邏輯更新
+    // ============================================================================
+    function updatePlaying() {
+      if (game.shake > 0) game.shake--;
+      if (game.player.invuln > 0) game.player.invuln--;
+      if (game.ultimateTimer > 0) game.ultimateTimer--;
+
+      updateBgLayers(1);
+      updateStageScript();
+
+      const ship = SHIPS[game.selectedShip];
+      const spd = ship.speed + (game.speedLv - 1) * 0.75;
+
+      let dx = 0, dy = 0;
+      if (game.keys['ArrowLeft'] || game.keys['KeyA']) dx -= 1;
+      if (game.keys['ArrowRight'] || game.keys['KeyD']) dx += 1;
+      if (game.keys['ArrowUp'] || game.keys['KeyW']) dy -= 1;
+      if (game.keys['ArrowDown'] || game.keys['KeyS']) dy += 1;
+
+      if (game.lockOn.active) {
+        // 鎖定時我機靜止，改為移動「狙」游標
+        const lockSpd = 8.5 + (game.speedLv - 1) * 1.1;
+        if (dx !== 0 || dy !== 0) {
+          const len = Math.hypot(dx, dy);
+          game.lockOn.x += (dx / len) * lockSpd;
+          game.lockOn.y += (dy / len) * lockSpd;
+        } else if (game.mouse.active) {
+          game.lockOn.x += (game.mouse.x - game.lockOn.x) * 0.45;
+          game.lockOn.y += (game.mouse.y - game.lockOn.y) * 0.45;
+        }
+        game.lockOn.x = Math.max(20, Math.min(W - 20, game.lockOn.x));
+        game.lockOn.y = Math.max(20, Math.min(H - 20, game.lockOn.y));
+
+        const lockR = DIFFICULTIES[game.difficulty].lockRadius;
+        if (game.lockOn.targets.length < 8) {
+          game.enemies.forEach(e => {
+            if (e.hp > 0 && game.lockOn.targets.length < 8 && !game.lockOn.targets.includes(e)) {
+              if (Math.hypot(e.x - game.lockOn.x, e.y - game.lockOn.y) < lockR) {
+                game.lockOn.targets.push(e);
+                sfx.lockOn();
+              }
+            }
+          });
+          if (game.boss && game.lockOn.targets.length < 8 && !game.lockOn.targets.includes(game.boss)) {
+            if (Math.hypot(game.boss.x - game.lockOn.x, game.boss.y - game.lockOn.y) < lockR + 24) {
+              game.lockOn.targets.push(game.boss);
+              sfx.lockOn();
+            }
+          }
+        }
+      } else {
+        const prevX = game.player.x, prevY = game.player.y;
+        if (dx !== 0 || dy !== 0) {
+          const len = Math.hypot(dx, dy);
+          game.player.x += (dx / len) * spd;
+          game.player.y += (dy / len) * spd;
+          game.mouse.active = false;
+        } else if (game.mouse.active) {
+          game.player.x += (game.mouse.x - game.player.x) * 0.48;
+          game.player.y += (game.mouse.y - game.player.y) * 0.48;
+        }
+        game.player.x = Math.max(24, Math.min(W - 24, game.player.x));
+        game.player.y = Math.max(24, Math.min(H - 24, game.player.y));
+
+        const mvx = game.player.x - prevX, mvy = game.player.y - prevY;
+        if (Math.hypot(mvx, mvy) > 0.6) {
+          const l = Math.hypot(mvx, mvy);
+          game.player.moveDirX = mvx / l;
+          game.player.moveDirY = mvy / l;
+        }
+      }
+
+      // 射擊
+      if (game.player.fireCd > 0) game.player.fireCd--;
+      const wantShoot = !game.lockOn.active && (game.autoFire || game.keys['KeyC'] || game.keys['Space'] || game.mouse.left);
+      if (wantShoot && game.player.fireCd <= 0) {
+        firePlayerWeapon();
+        game.player.fireCd = ship.fireRate;
+      }
+
+      updateOption();
+
+      // 更新我機子彈
+      for (let i = game.pBullets.length - 1; i >= 0; i--) {
+        const b = game.pBullets[i];
+        b.x += b.vx;
+        b.y += b.vy;
+        if (b.gravity) b.vy += b.gravity;
+
+        if (b.bounces > 0) {
+          if (b.x < 12 || b.x > W - 12) { b.vx *= -1; b.bounces--; }
+          if (b.y < 12 || b.y > H - 12) { b.vy *= -1; b.bounces--; }
+        }
+
+        let hit = false;
+        // 擊中敵機
+        for (let j = game.enemies.length - 1; j >= 0; j--) {
+          const e = game.enemies[j];
+          if (e && Math.hypot(b.x - e.x, b.y - e.y) < e.size * 0.65 + 10) {
+            damageEnemy(e, b.dmg, false);
+            if (b.sharp) {
+              for (let s = 0; s < 3; s++) {
+                const ang = (Math.PI * 2 / 3) * s + Math.random();
+                game.pBullets.push({
+                  x: b.x, y: b.y, vx: Math.cos(ang) * 8, vy: Math.sin(ang) * 8,
+                  char: '碎', color: '#fef08a', size: 11, dmg: 0.65, sharp: false, pierce: false, bounces: 0, gravity: 0
+                });
+              }
+            }
+            if (!b.pierce) { hit = true; break; }
+          }
+        }
+
+        // 擊中頭目與其部位
+        if (!hit && game.boss) {
+          const boss = game.boss;
+          for (const pt of boss.parts) {
+            if (pt.hp > 0) {
+              const px = boss.x + pt.ox, py = boss.y + pt.oy;
+              if (Math.hypot(b.x - px, b.y - py) < pt.size * 0.7 + 8) {
+                pt.hp -= b.dmg;
+                pt.hitFlash = 3;
+                sfx.hit();
+                if (pt.hp <= 0) {
+                  sfx.boom();
+                  addScore(800);
+                  spawnKanjiExplosion(px, py, 14, ['破', '爆'], ['#fb923c', '#fde047'], 28);
+                }
+                if (!b.pierce) { hit = true; break; }
+              }
+            }
+          }
+          if (!hit && Math.hypot(b.x - boss.x, b.y - boss.y) < boss.size * 0.55 + 8) {
+            damageBossCore(b.dmg, false);
+            if (!b.pierce) hit = true;
+          }
+        }
+
+        if (hit || b.x < -40 || b.x > W + 40 || b.y < -40 || b.y > H + 40) {
+          game.pBullets.splice(i, 1);
+        }
+      }
+
+      // 更新捕獲光炮「捕」
+      for (let i = game.captureBeams.length - 1; i >= 0; i--) {
+        const cb = game.captureBeams[i];
+        cb.x += cb.vx;
+        cb.life--;
+        let captured = false;
+        for (let j = game.enemies.length - 1; j >= 0; j--) {
+          const e = game.enemies[j];
+          if (e && Math.hypot(cb.x - e.x, cb.y - e.y) < e.size * 0.75 + 22) {
+            if (captureEnemy(e)) {
+              game.lockOn.targets = game.lockOn.targets.filter(t => t !== e);
+              game.enemies.splice(j, 1);
+              captured = true;
+              break;
+            } else {
+              spawnFloatingText(e.x, e.y - 20, '不可捕獲！', '#f43f5e', 16, 40);
+              damageEnemy(e, 3, false);
+              captured = true;
+              break;
+            }
+          }
+        }
+        if (captured || cb.life <= 0 || cb.x > W + 40) {
+          game.captureBeams.splice(i, 1);
+        }
+      }
+
+      updateEnemies();
+      updateBoss();
+
+      // 「究」無敵狀態直接撞擊頭目可造成巨額傷害（並給予「源」最後一擊）
+      if (game.boss && game.ultimateTimer > 0) {
+        if (Math.hypot(game.boss.x - game.player.x, game.boss.y - game.player.y) < game.boss.size * 0.65 + 24) {
+          damageBossCore(12, true);
+          spawnKanjiExplosion(game.player.x + 20, game.player.y, 4, ['究', '破'], ['#fde047', '#ffffff'], 28);
+        }
+      }
+
+      // 更新敵彈（安全防呆：hurtPlayer 清空陣列時立刻跳出）
+      for (let i = game.eBullets.length - 1; i >= 0; i--) {
+        const b = game.eBullets[i];
+        if (!b) continue;
+        b.x += b.vx;
+        b.y += b.vy;
+        if (Math.hypot(b.x - game.player.x, b.y - game.player.y) < 11) {
+          if (game.ultimateTimer > 0) {
+            game.eBullets.splice(i, 1);
+          } else {
+            hurtPlayer();
+            if (game.eBullets.length === 0) break;
+          }
+          continue;
+        }
+        if (b.x < -30 || b.x > W + 30 || b.y < -30 || b.y > H + 30) {
+          game.eBullets.splice(i, 1);
+        }
+      }
+
+      // 更新道具
+      for (let i = game.items.length - 1; i >= 0; i--) {
+        const it = game.items[i];
+        it.x += it.vx;
+        if (Math.hypot(it.x - game.player.x, it.y - game.player.y) < 28) {
+          applyItem(it);
+          game.items.splice(i, 1);
+          continue;
+        }
+        if (it.x < -40) game.items.splice(i, 1);
+      }
+
+      // 更新雷射、粒子與漂浮文字
+      for (let i = game.lasers.length - 1; i >= 0; i--) {
+        game.lasers[i].life--;
+        if (game.lasers[i].life <= 0) game.lasers.splice(i, 1);
+      }
+      for (let i = game.particles.length - 1; i >= 0; i--) {
+        const pt = game.particles[i];
+        pt.x += pt.vx;
+        pt.y += pt.vy;
+        pt.life--;
+        if (pt.life <= 0) game.particles.splice(i, 1);
+      }
+      for (let i = game.floatingTexts.length - 1; i >= 0; i--) {
+        const ft = game.floatingTexts[i];
+        ft.y -= 0.7;
+        ft.life--;
+        if (ft.life <= 0) game.floatingTexts.splice(i, 1);
+      }
+    }
+
+    // ============================================================================
+    // 主畫面繪製
+    // ============================================================================
+    function drawPlaying() {
+      ctx.save();
+      if (game.shake > 0) {
+        ctx.translate((Math.random() - 0.5) * game.shake * 0.7, (Math.random() - 0.5) * game.shake * 0.7);
+      }
+
+      ctx.fillStyle = '#020617';
+      ctx.fillRect(0, 0, W, H);
+      drawBgLayers();
+
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+
+      // 追蹤雷射貝茲曲線與「光」字流
+      game.lasers.forEach(ls => {
+        const alpha = ls.life / ls.maxLife;
+        ctx.save();
+        ctx.globalAlpha = alpha;
+        ctx.strokeStyle = ls.color;
+        ctx.lineWidth = 5 * alpha;
+        ctx.shadowColor = ls.color;
+        ctx.shadowBlur = 14;
+        ctx.beginPath();
+        ctx.moveTo(ls.sx, ls.sy);
+        ctx.quadraticCurveTo(ls.cx, ls.cy, ls.ex, ls.ey);
+        ctx.stroke();
+
+        ctx.fillStyle = '#ffffff';
+        ctx.font = getFont(15);
+        for (let t = 0.2; t <= 0.85; t += 0.22) {
+          const mt = 1 - t;
+          const x = mt * mt * ls.sx + 2 * mt * t * ls.cx + t * t * ls.ex;
+          const y = mt * mt * ls.sy + 2 * mt * t * ls.cy + t * t * ls.ey;
+          ctx.fillText('雷', x, y);
+        }
+        ctx.restore();
+      });
+
+      // 道具
+      game.items.forEach(it => {
+        ctx.save();
+        ctx.fillStyle = it.color;
+        ctx.shadowColor = it.color;
+        ctx.shadowBlur = 12;
+        ctx.font = getFont(it.size);
+        ctx.fillText(it.char, it.x, it.y);
+        ctx.restore();
+      });
+
+      // 捕獲光炮
+      game.captureBeams.forEach(cb => {
+        ctx.save();
+        ctx.fillStyle = '#34d399';
+        ctx.shadowColor = '#34d399';
+        ctx.shadowBlur = 16;
+        ctx.font = getFont(cb.size);
+        ctx.fillText('捕', cb.x, cb.y);
+        ctx.restore();
+      });
+
+      // 我機子彈
+      game.pBullets.forEach(b => {
+        ctx.fillStyle = b.color;
+        ctx.font = getFont(b.size);
+        ctx.fillText(b.char, b.x, b.y);
+      });
+
+      // 敵機
+      game.enemies.forEach(e => {
+        ctx.fillStyle = e.hitFlash > 0 ? '#ffffff' : e.color;
+        ctx.font = getFont(e.size);
+        ctx.fillText(e.char, e.x, e.y);
+
+        if (game.lockOn.targets.includes(e)) {
+          ctx.fillStyle = '#fde047';
+          ctx.font = getFont(16);
+          ctx.fillText('鎖', e.x, e.y - e.size * 0.72);
+        }
+      });
+
+      // 頭目與部位
+      if (game.boss) {
+        const b = game.boss;
+        b.parts.forEach(p => {
+          if (p.hp <= 0) return;
+          ctx.fillStyle = p.hitFlash > 0 ? '#ffffff' : p.color;
+          ctx.font = getFont(p.size);
+          ctx.fillText(p.char, b.x + p.ox, b.y + p.oy);
+        });
+
+        ctx.save();
+        ctx.fillStyle = b.hitFlash > 0 ? '#ffffff' : b.color;
+        ctx.shadowColor = b.color;
+        ctx.shadowBlur = 18;
+        ctx.font = getFont(b.size);
+        ctx.fillText(b.char, b.x, b.y);
+        ctx.restore();
+
+        if (game.lockOn.targets.includes(b)) {
+          ctx.fillStyle = '#fde047';
+          ctx.font = getFont(22);
+          ctx.fillText('鎖', b.x, b.y - b.size * 0.62);
+        }
+
+        // 頭目血條
+        const ratio = Math.max(0, b.hp / b.maxHp);
+        ctx.fillStyle = '#1e293b';
+        ctx.fillRect(200, 14, W - 400, 10);
+        ctx.fillStyle = b.escapePhase ? '#f43f5e' : '#facc15';
+        ctx.fillRect(200, 14, (W - 400) * ratio, 10);
+        ctx.font = getFont(14);
+        ctx.fillStyle = '#ffffff';
+        ctx.fillText(b.name, W / 2, 36);
+
+        if (b.stage === 8 && b.escapePhase) {
+          const sec = Math.max(0, (b.escapeTimer / 60)).toFixed(1);
+          ctx.font = getFont(16);
+          ctx.fillStyle = '#fde047';
+          ctx.fillText(`⚠ 「源」逃脫倒數 ${sec} 秒！取得「究」給予最後一擊！`, W / 2, 58);
+        }
+      }
+
+      // 捕獲副機
+      if (game.option) {
+        const op = game.option;
+        ctx.save();
+        ctx.fillStyle = op.color;
+        ctx.shadowColor = '#34d399';
+        ctx.shadowBlur = 12;
+        const opSize = op.char === '狂' ? 20 + op.rageStage * 5 : 26;
+        ctx.font = getFont(opSize);
+        ctx.fillText(op.char, op.x, op.y);
+        ctx.restore();
+      }
+
+      // 我機與無敵護盾圈／「究」無敵包覆
+      const ship = SHIPS[game.selectedShip];
+      const blink = game.player.invuln > 0 && Math.floor(game.player.invuln / 4) % 2 === 0;
+      if (game.player.invuln > 0) {
+        ctx.save();
+        ctx.strokeStyle = 'rgba(56, 189, 248, 0.55)';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(game.player.x, game.player.y, 24, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.restore();
+      }
+      if (!blink) {
+        ctx.save();
+        ctx.fillStyle = ship.color;
+        ctx.shadowColor = ship.color;
+        ctx.shadowBlur = 14;
+        ctx.font = getFont(30);
+        ctx.fillText(ship.char, game.player.x, game.player.y);
+        ctx.restore();
+      }
+      if (game.ultimateTimer > 0) {
+        ctx.save();
+        ctx.fillStyle = '#fde047';
+        ctx.shadowColor = '#fde047';
+        ctx.shadowBlur = 22;
+        ctx.font = getFont(48);
+        ctx.globalAlpha = 0.72;
+        ctx.fillText('究', game.player.x, game.player.y);
+        ctx.restore();
+      }
+
+      // 敵彈
+      game.eBullets.forEach(b => {
+        ctx.fillStyle = b.color;
+        ctx.font = getFont(b.size);
+        ctx.fillText(b.char, b.x, b.y);
+      });
+
+      // 粒子爆炸與漂浮文字
+      game.particles.forEach(pt => {
+        ctx.globalAlpha = Math.max(0, pt.life / pt.maxLife);
+        ctx.fillStyle = pt.color;
+        ctx.font = getFont(Math.round(pt.size));
+        ctx.fillText(pt.char, pt.x, pt.y);
+      });
+      ctx.globalAlpha = 1;
+
+      game.floatingTexts.forEach(ft => {
+        ctx.globalAlpha = Math.max(0, ft.life / ft.maxLife);
+        ctx.fillStyle = ft.color;
+        ctx.font = getFont(ft.size);
+        ctx.fillText(ft.text, ft.x, ft.y);
+      });
+      ctx.globalAlpha = 1;
+
+      // 「狙」鎖定游標與鎖定半徑圈
+      if (game.lockOn.active) {
+        const lockR = DIFFICULTIES[game.difficulty].lockRadius;
+        ctx.save();
+        ctx.strokeStyle = 'rgba(250, 204, 21, 0.45)';
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([6, 4]);
+        ctx.beginPath();
+        ctx.arc(game.lockOn.x, game.lockOn.y, lockR, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.restore();
+
+        ctx.font = getFont(34);
+        ctx.fillStyle = '#fde047';
+        ctx.shadowColor = '#facc15';
+        ctx.shadowBlur = 16;
+        ctx.fillText('狙', game.lockOn.x, game.lockOn.y);
+        ctx.shadowBlur = 0;
+      }
+
+      // 幕次標題橫幅
+      if (game.stageBannerTimer > 0) {
+        ctx.globalAlpha = Math.min(1, game.stageBannerTimer / 35);
+        ctx.font = getFont(44);
+        ctx.fillStyle = '#ffffff';
+        ctx.fillText(STAGE_NAMES[game.stage], W / 2, H / 2 - 20);
+        ctx.font = getFont(18);
+        ctx.fillStyle = '#38bdf8';
+        ctx.fillText(`LOOP ${game.loopCount} — ${DIFFICULTIES[game.difficulty].name}難度`, W / 2, H / 2 + 28);
+        ctx.globalAlpha = 1;
+      }
+
+      // 紅白機音效切換橫幅
+      if (game.famicomBannerTimer > 0) {
+        ctx.font = getFont(18);
+        ctx.fillStyle = '#fde047';
+        ctx.fillText(sfx.famicomMode ? '★ 已切換為 8-bit 復古音色 ★' : '已切回標準音效模式', W / 2, H - 26);
+      }
+
+      // BOSS 警報
+      if (game.bossWarningTimer > 0 && Math.floor(game.bossWarningTimer / 12) % 2 === 0) {
+        ctx.font = getFont(70);
+        ctx.fillStyle = '#ef4444';
+        ctx.fillText('警　　報', W / 2, H / 2 - 18);
+        ctx.font = getFont(22);
+        ctx.fillStyle = '#facc15';
+        const bNames = {
+          1: '機甲堡壘「壘」接近中！',
+          2: '森林古神「榕」甦醒了！',
+          3: '幽冥判官「判」與七情護衛接近中！',
+          4: '深淵巨鯨「鯨」接近中！',
+          5: '雷霆巨鳳「鳳」接近中！',
+          6: '煉獄炎龍「龍」接近中！',
+          7: '銀河要塞「城」接近中！',
+          8: '最終魔王「源」降臨！'
+        };
+        ctx.fillText(bNames[game.stage], W / 2, H / 2 + 44);
+      }
+
+      ctx.restore();
+    }
+
+    function drawTitleBackground() {
+      ctx.fillStyle = '#020617';
+      ctx.fillRect(0, 0, W, H);
+      updateBgLayers(0.6);
+      drawBgLayers();
+    }
+
+    // 固定每秒 60 次更新：高更新率螢幕（120Hz／144Hz 手機、平板）也不會變成兩倍速
+    const FRAME_STEP = 1000 / 60;
+    let lastFrameTime = 0;
+    let frameAcc = 0;
+
+    function gameLoop(now = performance.now()) {
+      requestAnimationFrame(gameLoop);
+      if (!lastFrameTime) lastFrameTime = now;
+      frameAcc += Math.min(250, now - lastFrameTime);
+      lastFrameTime = now;
+
+      let steps = 0;
+      while (frameAcc >= FRAME_STEP - 1 && steps < 4) {
+        frameAcc = Math.max(0, frameAcc - FRAME_STEP);
+        steps++;
+      }
+      if (steps === 4) frameAcc = 0;
+      if (steps === 0) return;
+
+      for (let i = 0; i < steps; i++) {
+        if (game.mode === 'intro') updateAndDrawIntro();
+        else if (game.mode === 'playing') updatePlaying();
+      }
+
+      if (game.mode === 'title') {
+        drawTitleBackground();
+      } else if (game.mode === 'playing' || game.mode === 'paused' || game.mode === 'gameover' || game.mode === 'victory') {
+        drawPlaying();
+      }
+
+      // 遊戲進行中隱藏網頁頁尾，讓畫面專心在戰場
+      document.body.classList.toggle('in-game', game.mode === 'intro' || game.mode === 'playing');
+    }
+
+    // ============================================================================
+    // 遊戲流程控制、全螢幕切換與事件監聽
+    // ============================================================================
+    function startNewGame(loop = 1) {
+      sfx.init();
+      game.loopCount = loop;
+      game.trueEnding = false;
+      if (loop === 1) {
+        game.score = 0;
+        game.lives = DIFFICULTIES[game.difficulty].lives;
+        game.speedLv = 1;
+        game.doubleLv = 1;
+        game.sharpLv = 0;
+        game.medalMult = 1;
+        game.ultimateTimer = 0;
+        game.captureGauge = 100;
+        game.option = null;
+      }
+      game.stage = loop === 1 ? game.startStage : 1;
+      startIntroSequence();
+    }
+
+    function togglePause() {
+      if (game.mode === 'playing') {
+        game.mode = 'paused';
+        showOverlay('pause');
+        sfx.blip();
+      } else if (game.mode === 'paused') {
+        game.mode = 'playing';
+        showOverlay(null);
+        sfx.blip();
+      }
+    }
+
+    function cycleFont() {
+      currentFontIdx = (currentFontIdx + 1) % FONTS.length;
+      document.getElementById('btn-font').textContent = `字型：${FONTS[currentFontIdx].name} (T)`;
+      sfx.blip();
+    }
+
+    async function toggleFullscreen() {
+      sfx.init();
+      sfx.blip();
+      const isNativeFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
+      const isCssFs = wrapper.classList.contains('is-fullscreen');
+
+      if (isNativeFs) {
+        try {
+          if (document.exitFullscreen) await document.exitFullscreen();
+          else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+        } catch (e) {}
+        wrapper.classList.remove('is-fullscreen');
+      } else if (isCssFs) {
+        wrapper.classList.remove('is-fullscreen');
+      } else {
+        try {
+          if (wrapper.requestFullscreen) await wrapper.requestFullscreen();
+          else if (wrapper.webkitRequestFullscreen) wrapper.webkitRequestFullscreen();
+          else wrapper.classList.add('is-fullscreen');
+        } catch (e) {
+          wrapper.classList.add('is-fullscreen');
+        }
+      }
+      setTimeout(resizeCanvas, 80);
+    }
+
+    // 標題選單按鈕
+    document.querySelectorAll('[data-ship]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        sfx.init(); sfx.blip();
+        document.querySelectorAll('[data-ship]').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        game.selectedShip = btn.dataset.ship;
+        updateHUD();
+      });
+    });
+
+    document.querySelectorAll('[data-stage]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        sfx.init(); sfx.blip();
+        document.querySelectorAll('[data-stage]').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        game.startStage = Number(btn.dataset.stage);
+      });
+    });
+
+    document.querySelectorAll('[data-diff]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        sfx.init(); sfx.blip();
+        document.querySelectorAll('[data-diff]').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        game.difficulty = btn.dataset.diff;
+        updateHUD();
+      });
+    });
+
+    document.querySelectorAll('.dex-tab').forEach(btn => {
+      btn.addEventListener('click', () => {
+        sfx.init(); sfx.blip();
+        renderDex(Number(btn.dataset.dextab));
+      });
+    });
+
+    // 彩蛋：點擊標題「河」解鎖隱藏機體「曜」
+    document.getElementById('secret-unlock').addEventListener('click', () => {
+      sfx.init();
+      if (!game.unlockedKiwami) {
+        game.unlockedKiwami = true;
+        sfx.unlock();
+        document.getElementById('ship-kiwami').classList.remove('hidden-el');
+        document.getElementById('secret-hint').textContent = '★ 隱藏機體「曜」已解鎖！ ★';
+        document.getElementById('secret-hint').classList.replace('text-slate-400', 'text-yellow-300');
+      }
+    });
+
+    document.getElementById('btn-start').addEventListener('click', () => startNewGame(1));
+    document.getElementById('btn-retry').addEventListener('click', () => startNewGame(1));
+    document.getElementById('btn-next-loop').addEventListener('click', () => startNewGame(game.loopCount + 1));
+    document.getElementById('btn-resume').addEventListener('click', togglePause);
+
+    const returnToTitle = () => {
+      sfx.blip();
+      game.mode = 'title';
+      showOverlay('title');
+      updateHUD();
+    };
+    document.getElementById('btn-pause-title').addEventListener('click', returnToTitle);
+    document.getElementById('btn-over-title').addEventListener('click', returnToTitle);
+    document.getElementById('btn-victory-title').addEventListener('click', returnToTitle);
+
+    document.getElementById('btn-title-dex').addEventListener('click', openDex);
+    document.getElementById('btn-pause-dex').addEventListener('click', openDex);
+    document.getElementById('btn-dex').addEventListener('click', openDex);
+    document.getElementById('btn-dex-close').addEventListener('click', closeDex);
+
+    document.getElementById('btn-title-fullscreen').addEventListener('click', toggleFullscreen);
+    document.getElementById('footer-dex').addEventListener('click', () => { window.scrollTo({ top: 0, behavior: 'smooth' }); openDex(); });
+    document.getElementById('footer-fullscreen').addEventListener('click', () => { window.scrollTo({ top: 0 }); toggleFullscreen(); });
+    document.getElementById('footer-top').addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    // 本機開發時版本號是佔位字，改顯示「開發版」
+    const versionTag = document.getElementById('version-tag');
+    if (versionTag.textContent.includes('__')) versionTag.textContent = '開發版';
+    document.getElementById('btn-fullscreen').addEventListener('click', toggleFullscreen);
+    document.getElementById('btn-font').addEventListener('click', cycleFont);
+    document.getElementById('btn-pause').addEventListener('click', togglePause);
+    document.getElementById('btn-capture').addEventListener('click', triggerCaptureOrDetonate);
+
+    const btnAutoFire = document.getElementById('btn-autofire');
+    btnAutoFire.addEventListener('click', () => {
+      game.autoFire = !game.autoFire;
+      btnAutoFire.textContent = game.autoFire ? '自動射：開 (F)' : '自動射：關 (F)';
+      sfx.blip();
+    });
+
+    const btnMute = document.getElementById('btn-mute');
+    btnMute.addEventListener('click', () => {
+      sfx.init();
+      // 循環：標準 → 8-bit → 靜音 → 標準
+      if (sfx.muted) { sfx.muted = false; sfx.famicomMode = false; }
+      else if (!sfx.famicomMode) { sfx.famicomMode = true; game.famicomBannerTimer = 110; }
+      else { sfx.muted = true; }
+      btnMute.textContent = sfx.muted ? '音效：靜音' : (sfx.famicomMode ? '音效：8-bit' : '音效：標準');
+      if (!sfx.muted) sfx.blip();
+    });
+
+    // 手機觸控按鈕
+    const btnTouchLock = document.getElementById('btn-touch-lock');
+    btnTouchLock.addEventListener('touchstart', e => { e.preventDefault(); startLockOn(); });
+    btnTouchLock.addEventListener('touchend', e => { e.preventDefault(); releaseLockOn(); });
+    btnTouchLock.addEventListener('touchcancel', () => releaseLockOn());
+    document.getElementById('btn-touch-pause').addEventListener('click', togglePause);
+    document.getElementById('btn-touch-capture').addEventListener('click', triggerCaptureOrDetonate);
+
+    // 滑鼠與觸控操作畫布
+    canvas.addEventListener('contextmenu', e => e.preventDefault());
+
+    canvas.addEventListener('mousemove', e => {
+      const pos = getCanvasCoords(e.clientX, e.clientY);
+      game.mouse.x = pos.x;
+      game.mouse.y = pos.y;
+      game.mouse.active = true;
+    });
+
+    canvas.addEventListener('mousedown', e => {
+      sfx.init();
+      if (game.mode === 'intro') { game.mode = 'playing'; return; }
+      if (game.mode !== 'playing') return;
+      if (e.button === 0) game.mouse.left = true;
+      if (e.button === 2) { game.mouse.right = true; startLockOn(); }
+      if (game.mouse.left && game.mouse.right) {
+        releaseLockOn();
+        triggerCaptureOrDetonate();
+      }
+    });
+
+    window.addEventListener('mouseup', e => {
+      if (e.button === 0) game.mouse.left = false;
+      if (e.button === 2) { game.mouse.right = false; releaseLockOn(); }
+    });
+
+    canvas.addEventListener('touchstart', e => {
+      sfx.init();
+      if (game.mode === 'intro') { game.mode = 'playing'; return; }
+      if (e.touches.length > 0) {
+        const pos = getCanvasCoords(e.touches[0].clientX, e.touches[0].clientY);
+        game.mouse.x = pos.x;
+        game.mouse.y = pos.y;
+        game.mouse.active = true;
+      }
+    }, { passive: true });
+
+    canvas.addEventListener('touchmove', e => {
+      if (e.touches.length > 0) {
+        const pos = getCanvasCoords(e.touches[0].clientX, e.touches[0].clientY);
+        game.mouse.x = pos.x;
+        game.mouse.y = pos.y;
+        game.mouse.active = true;
+      }
+    }, { passive: true });
+
+    // 鍵盤操作（避免 WASD 與快捷鍵衝突）
+    window.addEventListener('keydown', e => {
+      if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space'].includes(e.code)) {
+        e.preventDefault();
+      }
+      game.keys[e.code] = true;
+
+      if (game.mode === 'intro') {
+        game.mode = 'playing';
+        return;
+      }
+
+      if (e.code === 'Escape' && wrapper.classList.contains('is-fullscreen')) {
+        wrapper.classList.remove('is-fullscreen');
+        setTimeout(resizeCanvas, 60);
+      }
+      if (e.code === 'KeyP') togglePause();
+      if (e.code === 'KeyT') cycleFont();
+      if (e.code === 'KeyM') toggleFullscreen();
+      if (e.code === 'KeyI' && game.mode !== 'intro') openDex();
+      if (e.code === 'KeyF' && game.mode === 'playing') {
+        game.autoFire = !game.autoFire;
+        btnAutoFire.textContent = game.autoFire ? '自動射：開 (F)' : '自動射：關 (F)';
+      }
+      if (e.code === 'KeyV' && game.mode === 'playing') startLockOn();
+      if ((e.code === 'KeyB' || e.code === 'KeyZ') && game.mode === 'playing') triggerCaptureOrDetonate();
+      if (e.code === 'KeyR' && game.option && game.option.char === '狂') {
+        game.option.rageStage = (game.option.rageStage % 4) + 1;
+        spawnFloatingText(game.option.x, game.option.y - 20, `狂・第${game.option.rageStage}段`, '#ef4444', 16, 36);
+        sfx.blip();
+      }
+    });
+
+    window.addEventListener('keyup', e => {
+      game.keys[e.code] = false;
+      if (e.code === 'KeyV') releaseLockOn();
+    });
+
+    window.addEventListener('resize', resizeCanvas);
+    window.addEventListener('orientationchange', () => setTimeout(resizeCanvas, 200));
+
+    // 切到別的分頁、App 或鎖螢幕時自動暫停，回來不會已經被擊落
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden && game.mode === 'playing') togglePause();
+    });
+    window.addEventListener('blur', () => {
+      if (game.mode === 'playing') togglePause();
+    });
+
+    // 啟動遊戲主迴圈
+    window.onload = function () {
+      resizeCanvas();
+      initBgLayers();
+      updateHUD();
+      requestAnimationFrame(gameLoop);
+    };
+  </script>
+</body>
+</html>
